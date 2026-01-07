@@ -3,7 +3,7 @@
         "id": "go",
         "name": "START",
         "type": "GO",
-        "icon": "▶▶"
+        "icon": "◀◀"
     },
     {
         "id": "hyd",
@@ -21,6 +21,7 @@
         "group": "BROWN",
         "icon": "🇮🇳",
         "watermark": "తెలంగాణ",
+        "nativeName": "హైదరాబాద్",
         "houseCost": 5000
     },
     {
@@ -45,6 +46,7 @@
         "group": "BROWN",
         "icon": "🇮🇳",
         "watermark": "తెలంగాణ",
+        "nativeName": "వరంగల్",
         "houseCost": 5000
     },
     {
@@ -84,6 +86,7 @@
         "group": "LIGHT_BLUE",
         "icon": "🇮🇳",
         "watermark": "राजस्थान",
+        "nativeName": "जयपुर",
         "houseCost": 5000
     },
     {
@@ -108,6 +111,7 @@
         "group": "LIGHT_BLUE",
         "icon": "🇮🇳",
         "watermark": "राजस्थान",
+        "nativeName": "उदयपुर",
         "houseCost": 5000
     },
     {
@@ -126,6 +130,7 @@
         "group": "LIGHT_BLUE",
         "icon": "🇮🇳",
         "watermark": "राजस्थान",
+        "nativeName": "जोधपुर",
         "houseCost": 5000
     },
     {
@@ -150,6 +155,7 @@
         "group": "PINK",
         "icon": "🇮🇳",
         "watermark": "পশ্চিমবঙ্গ",
+        "nativeName": "কলকাতা",
         "houseCost": 10000
     },
     {
@@ -176,6 +182,7 @@
         "group": "PINK",
         "icon": "🇮🇳",
         "watermark": "পশ্চিমবঙ্গ",
+        "nativeName": "শিলিগুড়ি",
         "houseCost": 10000
     },
     {
@@ -194,6 +201,7 @@
         "group": "PINK",
         "icon": "🇮🇳",
         "watermark": "পশ্চিমবঙ্গ",
+        "nativeName": "দার্জিলিং",
         "houseCost": 10000
     },
     {
@@ -226,6 +234,7 @@
         "group": "ORANGE",
         "icon": "🇮🇳",
         "watermark": "उत्तर प्रदेश",
+        "nativeName": "नोएडा",
         "houseCost": 10000
     },
     {
@@ -250,6 +259,7 @@
         "group": "ORANGE",
         "icon": "🇮🇳",
         "watermark": "उत्तर प्रदेश",
+        "nativeName": "लखनऊ",
         "houseCost": 10000
     },
     {
@@ -268,6 +278,7 @@
         "group": "ORANGE",
         "icon": "🇮🇳",
         "watermark": "उत्तर प्रदेश",
+        "nativeName": "आगरा",
         "houseCost": 10000
     },
     {
@@ -292,6 +303,7 @@
         "group": "RED",
         "icon": "🇮🇳",
         "watermark": "ગુજરાત",
+        "nativeName": "અમદાવાદ",
         "houseCost": 15000
     },
     {
@@ -316,6 +328,7 @@
         "group": "RED",
         "icon": "🇮🇳",
         "watermark": "ગુજરાત",
+        "nativeName": "સુરત",
         "houseCost": 15000
     },
     {
@@ -334,6 +347,7 @@
         "group": "RED",
         "icon": "🇮🇳",
         "watermark": "ગુજરાત",
+        "nativeName": "વડોદરા",
         "houseCost": 15000
     },
     {
@@ -366,6 +380,7 @@
         "group": "YELLOW",
         "icon": "🇮🇳",
         "watermark": "ಕರ್ನಾಟಕ",
+        "nativeName": "ಬೆಂಗಳೂರು",
         "houseCost": 15000
     },
     {
@@ -384,6 +399,7 @@
         "group": "YELLOW",
         "icon": "🇮🇳",
         "watermark": "ಕರ್ನಾಟಕ",
+        "nativeName": "ಮೈಸೂರು",
         "houseCost": 15000
     },
     {
@@ -410,6 +426,7 @@
         "group": "YELLOW",
         "icon": "🇮🇳",
         "watermark": "ಕರ್ನಾಟಕ",
+        "nativeName": "ಮಂಗಳೂರು",
         "houseCost": 15000
     },
     {
@@ -434,6 +451,7 @@
         "group": "GREEN",
         "icon": "🇮🇳",
         "watermark": "தமிழ்நாடு",
+        "nativeName": "சென்னை",
         "houseCost": 20000
     },
     {
@@ -452,6 +470,7 @@
         "group": "GREEN",
         "icon": "🇮🇳",
         "watermark": "தமிழ்நாடு",
+        "nativeName": "கோயம்புத்தூர்",
         "houseCost": 20000
     },
     {
@@ -476,6 +495,7 @@
         "group": "GREEN",
         "icon": "🇮🇳",
         "watermark": "தமிழ்நாடு",
+        "nativeName": "மதுரை",
         "houseCost": 20000
     },
     {
@@ -514,6 +534,7 @@
         "group": "DARK_BLUE",
         "icon": "🇮🇳",
         "watermark": "महाराष्ट्र",
+        "nativeName": "पुणे",
         "houseCost": 20000
     },
     {
@@ -539,6 +560,7 @@
         "group": "DARK_BLUE",
         "icon": "🇮🇳",
         "watermark": "महाराष्ट्र",
+        "nativeName": "मुंबई",
         "houseCost": 20000
     }
 ]
