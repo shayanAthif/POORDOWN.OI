@@ -1,0 +1,544 @@
+[
+    {
+        "id": "go",
+        "name": "START",
+        "type": "GO",
+        "icon": "▶▶"
+    },
+    {
+        "id": "hyd",
+        "name": "Hyderabad",
+        "type": "PROPERTY",
+        "price": 6000,
+        "rent": [
+            200,
+            1000,
+            3000,
+            9000,
+            16000,
+            25000
+        ],
+        "group": "BROWN",
+        "icon": "🇮🇳",
+        "watermark": "తెలంగాణ",
+        "houseCost": 5000
+    },
+    {
+        "id": "cc1",
+        "name": "Treasure",
+        "type": "COMMUNITY_CHEST",
+        "icon": "📦"
+    },
+    {
+        "id": "war",
+        "name": "Warangal",
+        "type": "PROPERTY",
+        "price": 6000,
+        "rent": [
+            400,
+            2000,
+            6000,
+            18000,
+            32000,
+            45000
+        ],
+        "group": "BROWN",
+        "icon": "🇮🇳",
+        "watermark": "తెలంగాణ",
+        "houseCost": 5000
+    },
+    {
+        "id": "income_tax",
+        "name": "Income Tax",
+        "type": "TAX",
+        "price": 20000,
+        "icon": "💸"
+    },
+    {
+        "id": "ndls",
+        "name": "New Delhi Rly",
+        "type": "RAILROAD",
+        "price": 20000,
+        "rent": [
+            2500,
+            5000,
+            10000,
+            20000
+        ],
+        "icon": "🚂",
+        "watermark": "रेल"
+    },
+    {
+        "id": "jai",
+        "name": "Jaipur",
+        "type": "PROPERTY",
+        "price": 10000,
+        "rent": [
+            600,
+            3000,
+            9000,
+            27000,
+            40000,
+            55000
+        ],
+        "group": "LIGHT_BLUE",
+        "icon": "🇮🇳",
+        "watermark": "राजस्थान",
+        "houseCost": 5000
+    },
+    {
+        "id": "chance1",
+        "name": "Surprise",
+        "type": "CHANCE",
+        "icon": "❓"
+    },
+    {
+        "id": "uda",
+        "name": "Udaipur",
+        "type": "PROPERTY",
+        "price": 10000,
+        "rent": [
+            600,
+            3000,
+            9000,
+            27000,
+            40000,
+            55000
+        ],
+        "group": "LIGHT_BLUE",
+        "icon": "🇮🇳",
+        "watermark": "राजस्थान",
+        "houseCost": 5000
+    },
+    {
+        "id": "jod",
+        "name": "Jodhpur",
+        "type": "PROPERTY",
+        "price": 12000,
+        "rent": [
+            800,
+            4000,
+            10000,
+            30000,
+            45000,
+            60000
+        ],
+        "group": "LIGHT_BLUE",
+        "icon": "🇮🇳",
+        "watermark": "राजस्थान",
+        "houseCost": 5000
+    },
+    {
+        "id": "jail",
+        "name": "Police Custody",
+        "type": "JAIL",
+        "icon": "👮"
+    },
+    {
+        "id": "kol",
+        "name": "Kolkata",
+        "type": "PROPERTY",
+        "price": 14000,
+        "rent": [
+            1000,
+            5000,
+            15000,
+            45000,
+            62500,
+            75000
+        ],
+        "group": "PINK",
+        "icon": "🇮🇳",
+        "watermark": "পশ্চিমবঙ্গ",
+        "houseCost": 10000
+    },
+    {
+        "id": "electric",
+        "name": "5G Tower",
+        "type": "UTILITY",
+        "price": 15000,
+        "icon": "📡",
+        "watermark": "विज्ञान"
+    },
+    {
+        "id": "sil",
+        "name": "Siliguri",
+        "type": "PROPERTY",
+        "price": 14000,
+        "rent": [
+            1000,
+            5000,
+            15000,
+            45000,
+            62500,
+            75000
+        ],
+        "group": "PINK",
+        "icon": "🇮🇳",
+        "watermark": "পশ্চিমবঙ্গ",
+        "houseCost": 10000
+    },
+    {
+        "id": "dar",
+        "name": "Darjeeling",
+        "type": "PROPERTY",
+        "price": 16000,
+        "rent": [
+            1200,
+            6000,
+            18000,
+            50000,
+            70000,
+            90000
+        ],
+        "group": "PINK",
+        "icon": "🇮🇳",
+        "watermark": "পশ্চিমবঙ্গ",
+        "houseCost": 10000
+    },
+    {
+        "id": "mgr",
+        "name": "MGR Chennai",
+        "type": "RAILROAD",
+        "price": 20000,
+        "rent": [
+            2500,
+            5000,
+            10000,
+            20000
+        ],
+        "icon": "🚂",
+        "watermark": "रेल"
+    },
+    {
+        "id": "noi",
+        "name": "Noida",
+        "type": "PROPERTY",
+        "price": 18000,
+        "rent": [
+            1400,
+            7000,
+            20000,
+            55000,
+            75000,
+            95000
+        ],
+        "group": "ORANGE",
+        "icon": "🇮🇳",
+        "watermark": "उत्तर प्रदेश",
+        "houseCost": 10000
+    },
+    {
+        "id": "cc2",
+        "name": "Treasure",
+        "type": "COMMUNITY_CHEST",
+        "icon": "📦"
+    },
+    {
+        "id": "luc",
+        "name": "Lucknow",
+        "type": "PROPERTY",
+        "price": 18000,
+        "rent": [
+            1400,
+            7000,
+            20000,
+            55000,
+            75000,
+            95000
+        ],
+        "group": "ORANGE",
+        "icon": "🇮🇳",
+        "watermark": "उत्तर प्रदेश",
+        "houseCost": 10000
+    },
+    {
+        "id": "agr",
+        "name": "Agra",
+        "type": "PROPERTY",
+        "price": 20000,
+        "rent": [
+            1600,
+            8000,
+            22000,
+            60000,
+            80000,
+            100000
+        ],
+        "group": "ORANGE",
+        "icon": "🇮🇳",
+        "watermark": "उत्तर प्रदेश",
+        "houseCost": 10000
+    },
+    {
+        "id": "free_parking",
+        "name": "Free Parking",
+        "type": "FREE_PARKING",
+        "icon": "🚗"
+    },
+    {
+        "id": "ahm",
+        "name": "Ahmedabad",
+        "type": "PROPERTY",
+        "price": 22000,
+        "rent": [
+            1800,
+            9000,
+            25000,
+            70000,
+            87500,
+            105000
+        ],
+        "group": "RED",
+        "icon": "🇮🇳",
+        "watermark": "ગુજરાત",
+        "houseCost": 15000
+    },
+    {
+        "id": "chance2",
+        "name": "Surprise",
+        "type": "CHANCE",
+        "icon": "❓"
+    },
+    {
+        "id": "sur",
+        "name": "Surat",
+        "type": "PROPERTY",
+        "price": 22000,
+        "rent": [
+            1800,
+            9000,
+            25000,
+            70000,
+            87500,
+            105000
+        ],
+        "group": "RED",
+        "icon": "🇮🇳",
+        "watermark": "ગુજરાત",
+        "houseCost": 15000
+    },
+    {
+        "id": "vad",
+        "name": "Vadodara",
+        "type": "PROPERTY",
+        "price": 24000,
+        "rent": [
+            2000,
+            10000,
+            30000,
+            75000,
+            92500,
+            110000
+        ],
+        "group": "RED",
+        "icon": "🇮🇳",
+        "watermark": "ગુજરાત",
+        "houseCost": 15000
+    },
+    {
+        "id": "hwh",
+        "name": "Howrah Junc",
+        "type": "RAILROAD",
+        "price": 20000,
+        "rent": [
+            2500,
+            5000,
+            10000,
+            20000
+        ],
+        "icon": "🚂",
+        "watermark": "रेल"
+    },
+    {
+        "id": "ben",
+        "name": "Bengaluru",
+        "type": "PROPERTY",
+        "price": 26000,
+        "rent": [
+            2200,
+            11000,
+            33000,
+            80000,
+            97500,
+            115000
+        ],
+        "group": "YELLOW",
+        "icon": "🇮🇳",
+        "watermark": "ಕರ್ನಾಟಕ",
+        "houseCost": 15000
+    },
+    {
+        "id": "mys",
+        "name": "Mysuru",
+        "type": "PROPERTY",
+        "price": 26000,
+        "rent": [
+            2200,
+            11000,
+            33000,
+            80000,
+            97500,
+            115000
+        ],
+        "group": "YELLOW",
+        "icon": "🇮🇳",
+        "watermark": "ಕರ್ನಾಟಕ",
+        "houseCost": 15000
+    },
+    {
+        "id": "water",
+        "name": "ISRO Launchpad",
+        "type": "UTILITY",
+        "price": 15000,
+        "icon": "🚀",
+        "watermark": "विज्ञान"
+    },
+    {
+        "id": "man",
+        "name": "Mangaluru",
+        "type": "PROPERTY",
+        "price": 28000,
+        "rent": [
+            2400,
+            12000,
+            36000,
+            85000,
+            102500,
+            120000
+        ],
+        "group": "YELLOW",
+        "icon": "🇮🇳",
+        "watermark": "ಕರ್ನಾಟಕ",
+        "houseCost": 15000
+    },
+    {
+        "id": "go_to_jail",
+        "name": "Arrested",
+        "type": "GO_TO_JAIL",
+        "icon": "🚔"
+    },
+    {
+        "id": "che",
+        "name": "Chennai",
+        "type": "PROPERTY",
+        "price": 30000,
+        "rent": [
+            2600,
+            13000,
+            39000,
+            90000,
+            110000,
+            127500
+        ],
+        "group": "GREEN",
+        "icon": "🇮🇳",
+        "watermark": "தமிழ்நாடு",
+        "houseCost": 20000
+    },
+    {
+        "id": "coi",
+        "name": "Coimbatore",
+        "type": "PROPERTY",
+        "price": 30000,
+        "rent": [
+            2600,
+            13000,
+            39000,
+            90000,
+            110000,
+            127500
+        ],
+        "group": "GREEN",
+        "icon": "🇮🇳",
+        "watermark": "தமிழ்நாடு",
+        "houseCost": 20000
+    },
+    {
+        "id": "cc3",
+        "name": "Treasure",
+        "type": "COMMUNITY_CHEST",
+        "icon": "📦"
+    },
+    {
+        "id": "mad",
+        "name": "Madurai",
+        "type": "PROPERTY",
+        "price": 32000,
+        "rent": [
+            2800,
+            15000,
+            45000,
+            100000,
+            120000,
+            140000
+        ],
+        "group": "GREEN",
+        "icon": "🇮🇳",
+        "watermark": "தமிழ்நாடு",
+        "houseCost": 20000
+    },
+    {
+        "id": "csmt",
+        "name": "CSMT Mumbai",
+        "type": "RAILROAD",
+        "price": 20000,
+        "rent": [
+            2500,
+            5000,
+            10000,
+            20000
+        ],
+        "icon": "🚂",
+        "watermark": "रेल"
+    },
+    {
+        "id": "chance3",
+        "name": "Surprise",
+        "type": "CHANCE",
+        "icon": "❓"
+    },
+    {
+        "id": "pune",
+        "name": "Pune",
+        "type": "PROPERTY",
+        "price": 35000,
+        "rent": [
+            3500,
+            17500,
+            50000,
+            110000,
+            130000,
+            150000
+        ],
+        "group": "DARK_BLUE",
+        "icon": "🇮🇳",
+        "watermark": "महाराष्ट्र",
+        "houseCost": 20000
+    },
+    {
+        "id": "luxury_tax",
+        "name": "Luxury Tax",
+        "type": "TAX",
+        "price": 10000,
+        "icon": "💎"
+    },
+    {
+        "id": "mum",
+        "name": "Mumbai",
+        "type": "PROPERTY",
+        "price": 40000,
+        "rent": [
+            5000,
+            20000,
+            60000,
+            140000,
+            170000,
+            200000
+        ],
+        "group": "DARK_BLUE",
+        "icon": "🇮🇳",
+        "watermark": "महाराष्ट्र",
+        "houseCost": 20000
+    }
+]

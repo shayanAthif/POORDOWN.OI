@@ -18,8 +18,14 @@ const getFlagUrl = (icon: string) => {
   return code ? `https://flagcdn.com/w80/${code}.png` : null;
 };
 
+// Helper to get currency symbol based on map
+const getCurrencySymbol = (mapId: string = 'default') => {
+  if (mapId === 'india') return '₹';
+  return '$';
+};
+
 // Component for Player Row to handle individual money animation state
-const PlayerSidebarRow = ({ player, currentPlayerId }: { player: any, currentPlayerId: string | undefined }) => {
+const PlayerSidebarRow = ({ player, currentPlayerId, currency = '$' }: { player: any, currentPlayerId: string | undefined, currency?: string }) => {
   const [delta, setDelta] = useState<{ val: number, id: number } | null>(null);
   const prevMoney = useRef(player.money);
 
@@ -47,7 +53,7 @@ const PlayerSidebarRow = ({ player, currentPlayerId }: { player: any, currentPla
         </div>
       </div>
       <div className="player-balance" style={{ position: 'relative', overflow: 'visible', opacity: player.isDisconnected ? 0.5 : 1 }}>
-        ${player.money}
+        {currency}{player.money}
         {delta && (
           <span key={delta.id} className={`money-delta ${delta.val > 0 ? 'positive' : 'negative'}`} style={{ zIndex: 999 }}>
             {delta.val > 0 ? '+' : ''}{delta.val}
@@ -83,6 +89,8 @@ function App() {
     autoAuction: true,
     reconnectTimeoutSeconds: 60
   });
+
+  const currencySymbol = getCurrencySymbol(gameState?.config.mapId);
 
   // Player appearance colors
   const PLAYER_COLORS = [
@@ -596,6 +604,8 @@ function App() {
 
           <h3>Game Settings</h3>
 
+
+
           <div className="form-group">
             <label>Maximum Players</label>
             <select value={config.maxPlayers} onChange={e => setConfig({ ...config, maxPlayers: parseInt(e.target.value) })}>
@@ -621,6 +631,7 @@ function App() {
             <select value={config.mapId} onChange={e => setConfig({ ...config, mapId: e.target.value })}>
               <option value="default">Classic World</option>
               <option value="small">Speed Round</option>
+              <option value="india">Indian Economy</option>
             </select>
           </div>
 
@@ -841,7 +852,7 @@ function App() {
               />
             </form>
           </div>
-          {gameState.freeParkingPot > 0 && !gameState.config.vacationCash && <div className="free-parking-pot">🚗 Free Parking: ${gameState.freeParkingPot}</div>}
+          {gameState.freeParkingPot > 0 && !gameState.config.vacationCash && <div className="free-parking-pot">🚗 Free Parking: {currencySymbol}{gameState.freeParkingPot}</div>}
         </div>
 
         <div className="main-stage">
@@ -874,6 +885,7 @@ function App() {
             onUnmortgage={handleUnmortgage}
             onBuildHouse={handleBuildHouse}
             onSellHouse={handleSellHouse}
+            currency={currencySymbol}
           />
         </div>
 
@@ -887,7 +899,7 @@ function App() {
               // So I will create a mini-component inline or use a ref map in the parent.
               // For simplicity, let's extract a small helper component defined OUTSIDE App first, 
               // OR just use a specialized component here.
-              return <PlayerSidebarRow key={p.id} player={p} currentPlayerId={currentPlayer?.id} />;
+              return <PlayerSidebarRow key={p.id} player={p} currentPlayerId={currentPlayer?.id} currency={currencySymbol} />;
             })}
           </div>
 
@@ -1064,7 +1076,7 @@ function App() {
                         disabled={!!(viewingTradeId && !isNegotiating)}
                         className="money-input"
                       />
-                      <span className="currency-symbol">$</span>
+                      <span className="currency-symbol">{currencySymbol}</span>
                     </div>
                   </div>
 
@@ -1100,7 +1112,7 @@ function App() {
                             <div className="item-icon">{prop?.icon}</div>
                           )}
                           <div className="item-name">{prop?.name}</div>
-                          <div className="item-price">${prop?.price}</div>
+                          <div className="item-price">{currencySymbol}{prop?.price}</div>
                         </div>
                       );
                     })}
@@ -1159,7 +1171,7 @@ function App() {
                             disabled={!!(viewingTradeId && !isNegotiating)}
                             className="money-input"
                           />
-                          <span className="currency-symbol">$</span>
+                          <span className="currency-symbol">{currencySymbol}</span>
                         </div>
                       </div>
 
@@ -1195,7 +1207,7 @@ function App() {
                                 <div className="item-icon">{prop?.icon}</div>
                               )}
                               <div className="item-name">{prop?.name}</div>
-                              <div className="item-price">${prop?.price}</div>
+                              <div className="item-price">{currencySymbol}{prop?.price}</div>
                             </div>
                           );
                         })}
@@ -1264,7 +1276,7 @@ function App() {
               <div className="auction-body">
                 <div className="current-bid-section">
                   <div className="bid-label">Current Highest Bid</div>
-                  <div className="bid-amount">${gameState.auction.currentBid}</div>
+                  <div className="bid-amount">{currencySymbol}{gameState.auction.currentBid}</div>
 
                   {gameState.auction.highestBidderId ? (
                     <div className="highest-bidder">
@@ -1283,7 +1295,7 @@ function App() {
 
                 {myPlayer && !myPlayer.isBankrupt && (
                   <div className="bid-controls">
-                    <div className="my-money">Your Money: ${myPlayer.money}</div>
+                    <div className="my-money">Your Money: {currencySymbol}{myPlayer.money}</div>
 
                     {gameState.auction.highestBidderId === myPlayer.id ? (
                       <div className="highest-bidder-status" style={{ textAlign: 'center', color: '#4caf50', fontWeight: 'bold', padding: '10px' }}>
@@ -1295,15 +1307,15 @@ function App() {
                           <button
                             disabled={myPlayer.money < gameState.auction.currentBid + 10}
                             onClick={() => handlePlaceBid(gameState.auction!.currentBid + 10)}
-                          >+ $10</button>
+                          >+ {currencySymbol}10</button>
                           <button
                             disabled={myPlayer.money < gameState.auction.currentBid + 50}
                             onClick={() => handlePlaceBid(gameState.auction!.currentBid + 50)}
-                          >+ $50</button>
+                          >+ {currencySymbol}50</button>
                           <button
                             disabled={myPlayer.money < gameState.auction.currentBid + 100}
                             onClick={() => handlePlaceBid(gameState.auction!.currentBid + 100)}
-                          >+ $100</button>
+                          >+ {currencySymbol}100</button>
                         </div>
                         <div className="custom-bid">
                           <input

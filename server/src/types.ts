@@ -2,16 +2,16 @@
 // MONOPOLY GAME - SHARED TYPES
 // ============================================
 
-export type TileType = 
-  | 'PROPERTY' 
-  | 'RAILROAD' 
-  | 'UTILITY' 
-  | 'GO' 
-  | 'JAIL' 
-  | 'FREE_PARKING' 
-  | 'GO_TO_JAIL' 
-  | 'TAX' 
-  | 'CHANCE' 
+export type TileType =
+  | 'PROPERTY'
+  | 'RAILROAD'
+  | 'UTILITY'
+  | 'GO'
+  | 'JAIL'
+  | 'FREE_PARKING'
+  | 'GO_TO_JAIL'
+  | 'TAX'
+  | 'CHANCE'
   | 'COMMUNITY_CHEST';
 
 export interface Tile {
@@ -23,6 +23,7 @@ export interface Tile {
   group?: string;
   owner?: string;
   icon?: string;
+  watermark?: string;
   houses: number;
   houseCost?: number;
   isMortgaged: boolean;

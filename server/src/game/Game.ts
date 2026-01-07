@@ -21,7 +21,7 @@ export class Game {
   private currentCard?: Card;
   private freeParkingPot: number = 0;
   private propertyGroups: { [group: string]: string[] } = {};
-  
+
   // Trading & Auction
   private trades: TradeOffer[] = [];
   private auction?: Auction;
@@ -45,6 +45,12 @@ export class Game {
       let tiles: any[];
       if (mapId === 'small') {
         tiles = require('../maps/small.json');
+      } else if (mapId === 'india') {
+        tiles = require('../maps/india.json');
+        // Override starting cash default if standard
+        if (this.config.startingCash === 1500) {
+          this.config.startingCash = 150000;
+        }
       } else {
         tiles = require('../maps/default.json');
       }
@@ -80,6 +86,10 @@ export class Game {
   // ROOM MANAGEMENT
   // ============================================
 
+  private get multiplier(): number {
+    return this.config.mapId === 'india' ? 100 : 1;
+  }
+
   getConfig(): GameConfig {
     return this.config;
   }
@@ -88,7 +98,7 @@ export class Game {
     const player = this.players.find(p => p.id === playerId);
     if (!player?.isHost) throw new Error('Only host can change settings');
     if (this.gameStarted) throw new Error('Cannot change settings after game starts');
-    
+
     this.config = { ...this.config, ...newConfig };
     this.log('Settings updated');
   }
@@ -125,7 +135,7 @@ export class Game {
 
     const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f'];
     const isHost = this.players.length === 0;
-    
+
     const newPlayer: Player = {
       id: playerId,
       name,
@@ -145,7 +155,7 @@ export class Game {
       isDisconnected: false,
       disconnectedAt: undefined
     };
-    
+
     this.players.push(newPlayer);
     this.log(`${name} joined the room`);
   }
@@ -267,10 +277,10 @@ export class Game {
     if (this.gameOver) throw new Error('Game is over');
     const player = this.getPlayer(playerId);
     if (this.getCurrentPlayer().id !== playerId) throw new Error('Not your turn');
-    
+
     // Debt Check: Cannot roll if in debt
     if (player.money < 0) {
-        throw new Error('You are in debt! You must resolve it (mortgage/trade) before rolling.');
+      throw new Error('You are in debt! You must resolve it (mortgage/trade) before rolling.');
     }
 
     if (!this.mustRoll && !this.canRollAgain) throw new Error('Cannot roll now');
@@ -290,13 +300,13 @@ export class Game {
 
     if (isDoubles) {
       this.doublesCount++;
-      
+
       // 3 Doubles Rule
       if (this.doublesCount >= 3) {
         this.log(`${player.name} rolled 3 doubles in a row! Go to Jail!`);
         this.sendToJail(player);
         // Turn ends immediately per user request
-        this.advanceToNextPlayer(); 
+        this.advanceToNextPlayer();
         return;
       }
 
@@ -317,12 +327,12 @@ export class Game {
 
     this.mustRoll = false;
     this.handleLanding(player);
-    
+
     // Post-Landing Debt Check for Double Rolling
     // If they rolled doubles but landed on rent and went into debt, they CANNOT roll again.
     if (player.money < 0 && this.canRollAgain) {
-        this.canRollAgain = false;
-        this.log(`Stopped additional roll because ${player.name} is in debt.`);
+      this.canRollAgain = false;
+      this.log(`Stopped additional roll because ${player.name} is in debt.`);
     }
   }
 
@@ -350,16 +360,17 @@ export class Game {
       player.jailTurns++;
       this.log(`${player.name} failed to roll doubles.`);
       if (player.jailTurns >= 3) {
-        this.log(`${player.name} must pay $50 to leave jail.`); // Or force pay if they have it
-        if (player.money >= 50) {
-            player.money -= 50;
-            player.isJailed = false;
-            player.jailTurns = 0;
-            const total = die1 + die2;
-            player.position = (player.position + total) % this.board.length;
-            this.handleLanding(player);
+        const fine = 50 * this.multiplier;
+        this.log(`${player.name} must pay $${fine} to leave jail.`); // Or force pay if they have it
+        if (player.money >= fine) {
+          player.money -= fine;
+          player.isJailed = false;
+          player.jailTurns = 0;
+          const total = die1 + die2;
+          player.position = (player.position + total) % this.board.length;
+          this.handleLanding(player);
         } else {
-             // Basic fallback if broke in jail
+          // Basic fallback if broke in jail
         }
       }
       // Turn ends immediately on fail
@@ -406,7 +417,7 @@ export class Game {
           // User Request: Skip 2 turns when landing on vacation
           player.vacationTurnsLeft = 2;
           this.log(`${player.name} is now on vacation for 2 turns!`);
-          this.canRollAgain = false; 
+          this.canRollAgain = false;
           this.mustRoll = false;
           // Note: Turns will be consumed in advanceToNextPlayer
         }
@@ -417,7 +428,7 @@ export class Game {
   private handlePropertyLanding(player: Player, tile: Tile) {
     if (tile.owner && tile.owner !== player.id && !tile.isMortgaged) {
       const owner = this.getPlayer(tile.owner);
-      
+
       // Check jail rent rule
       if (owner.isJailed && !this.config.collectRentInJail) {
         this.log(`${owner.name} is in jail - no rent collected`);
@@ -461,9 +472,9 @@ export class Game {
     payer.money -= amount;
     owner.money += amount;
     this.log(`${payer.name} paid $${amount} rent to ${owner.name}`);
-    
+
     if (payer.money < 0) {
-        this.log(`${payer.name} is in debt! ($${payer.money})`);
+      this.log(`${payer.name} is in debt! ($${payer.money})`);
     }
   }
 
@@ -473,42 +484,42 @@ export class Game {
 
     if (tile.id === 'luxury_tax') {
       // Flat $75 for Luxury Tax
-      taxAmount = 75;
-      taxDescription = 'Luxury Tax ($75)';
+      taxAmount = 75 * this.multiplier;
+      taxDescription = `Luxury Tax ($${taxAmount})`;
     } else {
       // Progressive tax brackets based on player's wealth (Income Tax)
       let taxRate: number;
       let bracketName: string;
-      
-      if (player.money < 500) {
+
+      if (player.money < 500 * this.multiplier) {
         taxRate = 0.05; // 5% for low wealth
         bracketName = '5%';
-      } else if (player.money < 1000) {
+      } else if (player.money < 1000 * this.multiplier) {
         taxRate = 0.10; // 10% for medium wealth
         bracketName = '10%';
-      } else if (player.money < 2000) {
+      } else if (player.money < 2000 * this.multiplier) {
         taxRate = 0.15; // 15% for high wealth  
         bracketName = '15%';
       } else {
         taxRate = 0.20; // 20% for very high wealth
         bracketName = '20%';
       }
-      
+
       const calculatedTax = Math.floor(player.money * taxRate);
-      const minTax = 50; // Minimum tax
+      const minTax = 50 * this.multiplier; // Minimum tax
       taxAmount = Math.max(calculatedTax, minTax);
       taxDescription = `Income Tax (${bracketName} bracket)`;
     }
-    
+
     // Apply tax (Allow negative balance)
     player.money -= taxAmount;
     if (this.config.vacationCash) {
-       player.vacationFund += taxAmount;
+      player.vacationFund += taxAmount;
     }
     this.log(`${player.name} paid $${taxAmount} - ${taxDescription}`);
-    
+
     if (player.money < 0) {
-        this.log(`${player.name} is in debt! ($${player.money})`);
+      this.log(`${player.name} is in debt! ($${player.money})`);
     }
   }
 
@@ -609,9 +620,10 @@ export class Game {
   payJailFine(playerId: string) {
     const player = this.getPlayer(playerId);
     if (!player.isJailed) throw new Error('Not in jail');
-    if (player.money < 50) throw new Error('Not enough money');
+    const fine = 50 * this.multiplier;
+    if (player.money < fine) throw new Error('Not enough money');
 
-    player.money -= 50;
+    player.money -= fine;
     player.isJailed = false;
     player.jailTurns = 0;
     this.log(`${player.name} paid $50 to leave jail`);
@@ -696,7 +708,7 @@ export class Game {
 
   mortgageProperty(playerId: string, tileId: string) {
     if (!this.config.mortgageEnabled) throw new Error('Mortgages disabled');
-    
+
     const player = this.getPlayer(playerId);
     const tile = this.board.find(t => t.id === tileId);
     if (!tile) throw new Error('Tile not found');
@@ -716,15 +728,15 @@ export class Game {
     if (!tile) throw new Error('Tile not found');
     if (tile.owner !== playerId) throw new Error('Not yours');
     if (tile.houses > 0) throw new Error('Must sell houses first');
-    
+
     // User gets original price if NOT mortgaged. If mortgaged, nothing (already got 50%).
     const refund = tile.isMortgaged ? 0 : (tile.price || 0);
     player.money += refund;
-    
+
     tile.owner = undefined;
     tile.isMortgaged = false;
     player.properties = player.properties.filter(id => id !== tileId);
-    
+
     this.log(`${player.name} sold ${tile.name} to bank for $${refund}`);
   }
 
@@ -760,7 +772,7 @@ export class Game {
     if (this.getCurrentPlayer().id !== playerId) throw new Error('Not your turn');
     if (this.mustRoll) throw new Error('Must roll first');
     if (this.canRollAgain) throw new Error('Must roll again (doubles)');
-    
+
     // Check for debt
     const player = this.getPlayer(playerId);
     if (player.money < 0) throw new Error(`You are in debt ($${player.money}). Sell properties or trade to resolve it!`);
@@ -805,11 +817,11 @@ export class Game {
 
     // Vacation Skip Logic
     if (currentPlayer.vacationTurnsLeft && currentPlayer.vacationTurnsLeft > 0) {
-        currentPlayer.vacationTurnsLeft--;
-        this.log(`${currentPlayer.name} is on vacation! Skipping turn (${currentPlayer.vacationTurnsLeft} remaining).`);
-        // Recursively skip this player
-        this.advanceToNextPlayer();
-        return;
+      currentPlayer.vacationTurnsLeft--;
+      this.log(`${currentPlayer.name} is on vacation! Skipping turn (${currentPlayer.vacationTurnsLeft} remaining).`);
+      // Recursively skip this player
+      this.advanceToNextPlayer();
+      return;
     }
 
     this.log(`${currentPlayer.name}'s turn`);
@@ -831,12 +843,12 @@ export class Game {
   proposeTrade(fromId: string, toId: string, offer: { offerProperties: string[], offerMoney: number, requestProperties: string[], requestMoney: number }) {
     const from = this.getPlayer(fromId);
     const to = this.getPlayer(toId);
-    
+
     // Validate not empty trade
-    const hasContent = offer.offerProperties.length > 0 || offer.offerMoney > 0 || 
-                       offer.requestProperties.length > 0 || offer.requestMoney > 0;
+    const hasContent = offer.offerProperties.length > 0 || offer.offerMoney > 0 ||
+      offer.requestProperties.length > 0 || offer.requestMoney > 0;
     if (!hasContent) throw new Error('Cannot send empty trade');
-    
+
     // Validate ownership
     for (const propId of offer.offerProperties) {
       const tile = this.board.find(t => t.id === propId);
@@ -848,9 +860,9 @@ export class Game {
       if (!tile || tile.owner !== toId) throw new Error('They dont own that property');
       if (tile.houses > 0) throw new Error('Cannot trade property with buildings');
     }
-    
+
     if (from.money < offer.offerMoney) throw new Error('Not enough money');
-    
+
     const trade: TradeOffer = {
       id: Math.random().toString(36).substring(2, 8),
       fromPlayerId: fromId,
@@ -861,7 +873,7 @@ export class Game {
       requestMoney: offer.requestMoney,
       status: 'PENDING'
     };
-    
+
     this.trades.push(trade);
     this.log(`${from.name} proposed a trade to ${to.name}`);
     return trade.id;
@@ -872,14 +884,14 @@ export class Game {
     if (!trade) throw new Error('Trade not found');
     if (trade.toPlayerId !== playerId) throw new Error('Not your trade to accept');
     if (trade.status !== 'PENDING') throw new Error('Trade no longer pending');
-    
+
     const from = this.getPlayer(trade.fromPlayerId);
     const to = this.getPlayer(trade.toPlayerId);
-    
+
     // Final validation
     if (from.money < trade.offerMoney) throw new Error('Offerer lacks funds');
     if (to.money < trade.requestMoney) throw new Error('You lack funds');
-    
+
     // Execute trade - transfer properties
     for (const propId of trade.offerProperties) {
       const tile = this.board.find(t => t.id === propId)!;
@@ -893,13 +905,13 @@ export class Game {
       to.properties = to.properties.filter(p => p !== propId);
       from.properties.push(propId);
     }
-    
+
     // Transfer money
     from.money -= trade.offerMoney;
     to.money += trade.offerMoney;
     to.money -= trade.requestMoney;
     from.money += trade.requestMoney;
-    
+
     trade.status = 'ACCEPTED';
     this.log(`${to.name} accepted trade from ${from.name}`);
   }
@@ -908,16 +920,16 @@ export class Game {
     const trade = this.trades.find(t => t.id === tradeId);
     if (!trade) throw new Error('Trade not found');
     if (trade.toPlayerId !== playerId) throw new Error('Not your turn to negotiate this trade');
-    
+
     // Validate new content
     const from = this.getPlayer(playerId); // The person countering is now the "From" (Sender)
     const to = this.getPlayer(trade.fromPlayerId); // The original sender is now the "To" (Recipient)
 
     // Run same validation as proposeTrade
-    const hasContent = offer.offerProperties.length > 0 || offer.offerMoney > 0 || 
-                       offer.requestProperties.length > 0 || offer.requestMoney > 0;
+    const hasContent = offer.offerProperties.length > 0 || offer.offerMoney > 0 ||
+      offer.requestProperties.length > 0 || offer.requestMoney > 0;
     if (!hasContent) throw new Error('Cannot send empty trade');
-    
+
     // Check ownership for the COUNTER offer
     for (const propId of offer.offerProperties) {
       const tile = this.board.find(t => t.id === propId);
@@ -929,7 +941,7 @@ export class Game {
       if (!tile || tile.owner !== to.id) throw new Error('They dont own that property');
       if (tile.houses > 0) throw new Error('Cannot trade property with buildings');
     }
-    
+
     // Update Trade Record (Swap roles)
     trade.fromPlayerId = from.id;
     trade.toPlayerId = to.id; // Swap
@@ -946,7 +958,7 @@ export class Game {
     const trade = this.trades.find(t => t.id === tradeId);
     if (!trade) throw new Error('Trade not found');
     if (trade.toPlayerId !== playerId) throw new Error('Not your trade');
-    
+
     trade.status = 'REJECTED';
     this.log('Trade rejected');
   }
@@ -955,7 +967,7 @@ export class Game {
     const trade = this.trades.find(t => t.id === tradeId);
     if (!trade) throw new Error('Trade not found');
     if (trade.fromPlayerId !== playerId) throw new Error('Not your trade');
-    
+
     trade.status = 'CANCELLED';
     this.log('Trade cancelled');
   }
@@ -967,13 +979,13 @@ export class Game {
   declineProperty(playerId: string) {
     const player = this.getPlayer(playerId);
     if (this.getCurrentPlayer().id !== playerId) throw new Error('Not your turn');
-    
+
     const tile = this.board[player.position];
     if (tile.owner) throw new Error('Already owned');
     if (!['PROPERTY', 'RAILROAD', 'UTILITY'].includes(tile.type)) throw new Error('Not purchasable');
-    
+
     this.log(`${player.name} declined to buy ${tile.name}`);
-    
+
     if (this.config.auctionEnabled) {
       this.startAuction(tile);
     }
@@ -995,35 +1007,35 @@ export class Game {
 
   placeBid(playerId: string, amount: number) {
     if (!this.auction || !this.auction.isActive) throw new Error('No active auction');
-    
+
     const player = this.getPlayer(playerId);
     if (amount <= this.auction.currentBid) throw new Error('Bid must be higher');
     if (amount > player.money) throw new Error('Not enough money');
-    
+
     this.auction.currentBid = amount;
     this.auction.highestBidderId = playerId;
     this.auction.highestBidderName = player.name;
     this.auction.endTime = Date.now() + 6000; // Reset timer to 6 seconds on bid
-    
+
     this.log(`${player.name} bid $${amount}`);
   }
 
   completeAuction(): boolean {
     if (!this.auction) return false;
-    
+
     if (this.auction.highestBidderId && this.auction.currentBid > 0) {
       const winner = this.getPlayer(this.auction.highestBidderId);
       const tile = this.board.find(t => t.id === this.auction!.tileId)!;
-      
+
       winner.money -= this.auction.currentBid;
       tile.owner = winner.id;
       winner.properties.push(tile.id);
-      
+
       this.log(`${winner.name} won ${tile.name} for $${this.auction.currentBid}`);
     } else {
       this.log('Auction ended with no bids');
     }
-    
+
     this.auction = undefined;
     return true;
   }
@@ -1035,7 +1047,7 @@ export class Game {
   private declareBankruptcy(player: Player, creditorId?: string) {
     player.isBankrupt = true;
     this.log(`${player.name} is bankrupt!`);
-    
+
     // Transfer all assets to creditor or bank
     for (const propId of player.properties) {
       const tile = this.board.find(t => t.id === propId)!;
@@ -1049,9 +1061,9 @@ export class Game {
         tile.isMortgaged = false;
       }
     }
-    
+
     player.properties = [];
-    
+
     if (creditorId) {
       const creditor = this.getPlayer(creditorId);
       creditor.money += player.money;
@@ -1062,21 +1074,21 @@ export class Game {
   voluntaryBankrupt(playerId: string) {
     const player = this.getPlayer(playerId);
     if (player.isBankrupt) throw new Error('Already bankrupt');
-    
+
     const isCurrentTurn = this.getCurrentPlayer().id === playerId;
     this.declareBankruptcy(player);
-    
+
     // If it was their turn, immediately end it and move to next player
     if (isCurrentTurn) {
-        this.log(`${player.name} ended turn via bankruptcy`);
-        this.currentCard = undefined;
-        this.advanceToNextPlayer();
+      this.log(`${player.name} ended turn via bankruptcy`);
+      this.currentCard = undefined;
+      this.advanceToNextPlayer();
     }
   }
 
   restartGame(requesterId: string) {
     // Basic validation? maybe only host? optional.
-    
+
     this.gameStarted = true;
     this.gameOver = false;
     this.winnerId = undefined;
@@ -1092,30 +1104,30 @@ export class Game {
 
     // Reset Board
     this.board.forEach(tile => {
-        tile.owner = undefined;
-        tile.houses = 0;
-        tile.isMortgaged = false;
+      tile.owner = undefined;
+      tile.houses = 0;
+      tile.isMortgaged = false;
     });
 
     // Reset Players
     this.players.forEach(p => {
-        p.money = this.config.startingCash;
-        p.position = 0;
-        p.properties = [];
-        p.isJailed = false;
-        p.jailTurns = 0;
-        p.getOutOfJailCards = 0;
-        p.isBankrupt = false;
-        p.vacationFund = 0;
-        p.vacationTurnsLeft = 0;
+      p.money = this.config.startingCash;
+      p.position = 0;
+      p.properties = [];
+      p.isJailed = false;
+      p.jailTurns = 0;
+      p.getOutOfJailCards = 0;
+      p.isBankrupt = false;
+      p.vacationFund = 0;
+      p.vacationTurnsLeft = 0;
     });
-    
+
     // Shuffle if needed
     if (this.config.randomizeOrder) {
-        for (let i = this.players.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this.players[i], this.players[j]] = [this.players[j], this.players[i]];
-        }
+      for (let i = this.players.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.players[i], this.players[j]] = [this.players[j], this.players[i]];
+      }
     }
 
     this.log(`Game restarted by ${this.getPlayer(requesterId).name}!`);

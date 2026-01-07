@@ -33,7 +33,7 @@
   height: var(--board-height);
   min-width: 350px;
   min-height: 350px;
-  background: #1a1a2e;
+  background: linear-gradient(to bottom, rgba(255, 153, 51, 0.15), rgba(255, 255, 255, 0.05), rgba(19, 136, 8, 0.15)), #1a1a2e;
   border-radius: 8px;
   display: grid;
   grid-template-columns: var(--corner-width) 1fr var(--corner-width);
@@ -467,7 +467,7 @@
 .board-center {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  background: #131325;
+  background: transparent;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -954,10 +954,6 @@
   display: flex;
   flex-direction: column;
   pointer-events: auto;
-
-  /* Smooth Fade-in Animation Re-added (Subtle speed) */
-  animation: panelFadeIn 0.15s ease-out;
-  transform-origin: center center;
 }
 
 /* Position overrides (Pixel-based to match arrow size) */
@@ -967,6 +963,8 @@
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 0;
+  animation: expandUp 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: bottom center;
 }
 
 .tile-property-panel.expand-down {
@@ -974,6 +972,8 @@
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0;
+  animation: expandDown 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: top center;
 }
 
 .tile-property-panel.expand-right {
@@ -981,6 +981,8 @@
   top: 50%;
   transform: translateY(-50%);
   margin-left: 0;
+  animation: expandRight 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: left center;
 }
 
 .tile-property-panel.expand-left {
@@ -988,6 +990,8 @@
   top: 50%;
   transform: translateY(-50%);
   margin-right: 0;
+  animation: expandLeft 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: right center;
 }
 
 /* === POINTER ARROW (Speech Bubble Caret) === */
@@ -1400,3 +1404,138 @@
 }
 
 /* Old animations removed */
+/* --- WATERMARK STYLES --- */
+.tile-watermark {
+  position: absolute;
+  /* Default center, overridden per side */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+  user-select: none;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* Adjustments for different sides to place watermark between Flag(Outer) and Name(Inner) */
+/* Bottom Row: Flag at Top (Outer). Name at Top (Inner). Position Watermark near Top Edge. */
+.side-bottom .tile-watermark {
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Top Row: Flag at Bottom (Outer). Name at Bottom (Inner). Position Watermark near Bottom Edge. */
+.side-top .tile-watermark {
+  top: auto;
+  bottom: 25%;
+  left: 50%;
+  transform: translate(-50%, 50%) rotate(180deg);
+}
+
+/* Left Row: Flag at Right (Outer). Name at Right (Inner). Position Watermark near Right Edge. */
+.side-left .tile-watermark {
+  left: auto;
+  right: 25%;
+  top: 50%;
+  transform: translate(50%, -50%) rotate(90deg);
+}
+
+/* Right Row: Flag at Left (Outer). Name at Left (Inner). Position Watermark near Left Edge. */
+.side-right .tile-watermark {
+  left: 25%;
+  right: auto;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* Ensure watermarks don't overflow small tiles but ALLOW flags to pop out */
+.tile-base {
+  overflow: visible;
+}
+
+.tile-content {
+  overflow: visible;
+  /* Ensure flag can be seen outside */
+}
+
+/* Wrapper to contain watermark overflow */
+.watermark-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  /* Match watermark z-index */
+  border-radius: inherit;
+  /* Follow tile curvature if any */
+}
+
+/* Update child watermark to index 0 relative to wrapper, wrapper handles z-index */
+.tile-watermark {
+  z-index: 0;
+}
+
+
+/* --- TILE BACKGROUNDS (Light/Tinted per Group) --- */
+/* Overrides default tile background */
+
+.tile-base.group-BROWN {
+  background: #2d2420;
+  /* Very dark brown tint */
+  border-color: #5d4037;
+}
+
+.tile-base.group-LIGHT_BLUE {
+  background: #1a252f;
+  /* Dark blue-ish tint */
+  border-color: #2980b9;
+}
+
+.tile-base.group-PINK {
+  background: #2e1a26;
+  /* Dark pink tint */
+  border-color: #8e44ad;
+}
+
+.tile-base.group-ORANGE {
+  background: #2e201a;
+  /* Dark orange tint */
+  border-color: #d35400;
+}
+
+.tile-base.group-RED {
+  background: #2e1a1a;
+  /* Dark red tint */
+  border-color: #c0392b;
+}
+
+.tile-base.group-YELLOW {
+  background: #2e2e1a;
+  /* Dark yellow/olive tint */
+  border-color: #f1c40f;
+}
+
+.tile-base.group-GREEN {
+  background: #1a2e1a;
+  /* Dark green tint */
+  border-color: #27ae60;
+}
+
+.tile-base.group-DARK_BLUE {
+  background: #1a1a35;
+  /* Indigo tint */
+  border-color: #34495e;
+}
+
+/* Hover effects to brighten them slightly */
+.tile-base[class*='group-']:hover {
+  filter: brightness(1.2);
+}

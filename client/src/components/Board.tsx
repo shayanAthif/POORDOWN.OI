@@ -28,6 +28,7 @@ interface BoardProps {
   onBuildHouse?: (tileId: string) => void;
   onSellHouse?: (tileId: string) => void;
   onSellProperty?: (tileId: string) => void;
+  currency?: string;
 }
 
 // Calculate estimated tax based on player's money
@@ -55,14 +56,14 @@ const calculateTax = (playerMoney: number, tileId?: string): { amount: number; r
 
   const tax = Math.max(Math.floor(playerMoney * taxRate), 50);
   return { amount: tax, rate: rateName };
-
 };
 
 
 export const Board: React.FC<BoardProps> = ({
   gameState, currentPlayerId, onTileClick, highlightedTile, animatingPlayerId, animationPosition,
   onRoll, onBuy, onDecline, onEndTurn, onPayJailFine, onUseJailCard, isMyTurn, canBuy, canAfford, isRolling,
-  expandedTile, onCloseExpanded, onMortgage, onUnmortgage, onBuildHouse, onSellHouse, onSellProperty
+  expandedTile, onCloseExpanded, onMortgage, onUnmortgage, onBuildHouse, onSellHouse, onSellProperty,
+  currency = '$'
 }) => {
   const { board, players } = gameState;
   const currentPlayer = players.find(p => p.id === currentPlayerId);
@@ -132,7 +133,7 @@ export const Board: React.FC<BoardProps> = ({
 
     // Additional styling for monopoly glow (border only)
     // Additional styling for monopoly glow (border only)
-    const additionalClasses = `tile-${tile.id} type-${tile.type} ${tile.isMortgaged ? 'mortgaged' : ''} ${owner ? 'owned' : ''} ${isHighlighted ? 'highlighted' : ''} ${isMonopoly ? 'monopoly-glow' : ''} ${isPanelOpen ? 'panel-active' : ''}`;
+    const additionalClasses = `tile-${tile.id} ${tile.group ? 'group-' + tile.group : ''} type-${tile.type} ${tile.isMortgaged ? 'mortgaged' : ''} ${owner ? 'owned' : ''} ${isHighlighted ? 'highlighted' : ''} ${isMonopoly ? 'monopoly-glow' : ''} ${isPanelOpen ? 'panel-active' : ''}`;
 
     // Monopoly glow effect style (applied to outer div)
     const glowStyle = isMonopoly ? {
@@ -169,6 +170,11 @@ export const Board: React.FC<BoardProps> = ({
         style={{ ...tileStyle, ...glowStyle, cursor: isInteractive ? 'pointer' : 'default' }}
       >
         <div className="tile-content">
+          {tile.watermark && (
+            <div className="watermark-container">
+              <div className="tile-watermark">{tile.watermark}</div>
+            </div>
+          )}
           {flagUrl ? (
             <div className="tile-flag">
               <img src={flagUrl} alt="" />
@@ -181,7 +187,7 @@ export const Board: React.FC<BoardProps> = ({
           {/* Show dynamic tax for TAX tiles */}
           {tile.type === 'TAX' && currentPlayer && (
             <div className="tile-price tax-price">
-              {calculateTax(currentPlayer.money, tile.id).rate} (${calculateTax(currentPlayer.money, tile.id).amount})
+              {calculateTax(currentPlayer.money, tile.id).rate} ({currency}{calculateTax(currentPlayer.money, tile.id).amount})
             </div>
           )}
 
@@ -205,7 +211,7 @@ export const Board: React.FC<BoardProps> = ({
                 tile.houses > 0 ? renderHouses(tile.houses) : null
               ) : (
                 // Unowned: Show Price
-                `$${tile.price}`
+                `${currency}${tile.price}`
               )}
             </div>
           )}
@@ -256,22 +262,22 @@ export const Board: React.FC<BoardProps> = ({
               {/* Property rent with houses */}
               {tile.rent && tile.type === 'PROPERTY' && (
                 <>
-                  <div className="panel-rent-row"><span>Rent</span><span>${tile.rent[0]}</span></div>
-                  <div className="panel-rent-row"><span>1 House</span><span>${tile.rent[1]}</span></div>
-                  <div className="panel-rent-row"><span>2 Houses</span><span>${tile.rent[2]}</span></div>
-                  <div className="panel-rent-row"><span>3 Houses</span><span>${tile.rent[3]}</span></div>
-                  <div className="panel-rent-row"><span>4 Houses</span><span>${tile.rent[4]}</span></div>
-                  <div className="panel-rent-row"><span>Hotel</span><span>${tile.rent[5]}</span></div>
+                  <div className="panel-rent-row"><span>Rent</span><span>{currency}{tile.rent[0]}</span></div>
+                  <div className="panel-rent-row"><span>1 House</span><span>{currency}{tile.rent[1]}</span></div>
+                  <div className="panel-rent-row"><span>2 Houses</span><span>{currency}{tile.rent[2]}</span></div>
+                  <div className="panel-rent-row"><span>3 Houses</span><span>{currency}{tile.rent[3]}</span></div>
+                  <div className="panel-rent-row"><span>4 Houses</span><span>{currency}{tile.rent[4]}</span></div>
+                  <div className="panel-rent-row"><span>Hotel</span><span>{currency}{tile.rent[5]}</span></div>
                 </>
               )}
 
               {/* Railroad/Airport rent */}
               {tile.type === 'RAILROAD' && (
                 <>
-                  <div className="panel-rent-row"><span>1 Airport</span><span>$25</span></div>
-                  <div className="panel-rent-row"><span>2 Airports</span><span>$50</span></div>
-                  <div className="panel-rent-row"><span>3 Airports</span><span>$100</span></div>
-                  <div className="panel-rent-row"><span>4 Airports</span><span>$200</span></div>
+                  <div className="panel-rent-row"><span>1 Airport</span><span>{currency}25</span></div>
+                  <div className="panel-rent-row"><span>2 Airports</span><span>{currency}50</span></div>
+                  <div className="panel-rent-row"><span>3 Airports</span><span>{currency}100</span></div>
+                  <div className="panel-rent-row"><span>4 Airports</span><span>{currency}200</span></div>
                 </>
               )}
 
@@ -284,8 +290,8 @@ export const Board: React.FC<BoardProps> = ({
             </div>
 
             <div className="panel-footer">
-              <div className="panel-stat"><span className="panel-stat-icon">💰</span> ${tile.price}</div>
-              {tile.houseCost && <div className="panel-stat"><span className="panel-stat-icon">🏠</span> ${tile.houseCost}</div>}
+              <div className="panel-stat"><span className="panel-stat-icon">💰</span> {currency}{tile.price}</div>
+              {tile.houseCost && <div className="panel-stat"><span className="panel-stat-icon">🏠</span> {currency}{tile.houseCost}</div>}
             </div>
 
             {/* Owner Actions */}
@@ -332,7 +338,7 @@ export const Board: React.FC<BoardProps> = ({
           <div className="corner-name">{tile.name}</div>
           {tile.type === 'FREE_PARKING' && gameState.config.vacationCash && myPlayer && myPlayer.vacationFund > 0 && (
             <div style={{ fontSize: '0.7rem', color: '#00b894', fontWeight: 'bold', marginTop: '2px', background: 'rgba(0,0,0,0.5)', padding: '2px 4px', borderRadius: '4px' }}>
-              ${myPlayer.vacationFund}
+              {currency}{myPlayer.vacationFund}
             </div>
           )}
         </div>
@@ -423,7 +429,7 @@ export const Board: React.FC<BoardProps> = ({
               {myPlayer?.isJailed ? (
                 <div className="jail-options">
                   <button className="action-btn jail-btn" onClick={onPayJailFine}>
-                    💰 Pay $50 Fine
+                    💰 Pay {currency}50 Fine
                   </button>
                   {myPlayer.getOutOfJailCards > 0 && (
                     <button className="action-btn jail-btn" onClick={onUseJailCard}>
