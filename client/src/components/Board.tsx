@@ -170,9 +170,15 @@ export const Board: React.FC<BoardProps> = ({
         style={{ ...tileStyle, ...glowStyle, cursor: isInteractive ? 'pointer' : 'default' }}
       >
         <div className="tile-content">
-          {tile.watermark && (
+          {(tile.watermark || (gameState.config.mapId !== 'india' && (flagUrl || tile.icon))) && (
             <div className="watermark-container">
-              <div className="tile-watermark">{tile.watermark}</div>
+              {tile.watermark ? (
+                <div className="tile-watermark">{tile.watermark}</div>
+              ) : flagUrl ? (
+                <div className="tile-watermark is-flag-image" style={{ backgroundImage: `url(${flagUrl})` }} />
+              ) : (
+                <div className="tile-watermark is-flag-emoji">{tile.icon}</div>
+              )}
             </div>
           )}
           {flagUrl ? (
@@ -242,6 +248,15 @@ export const Board: React.FC<BoardProps> = ({
         {isPanelOpen && tile.type !== 'TAX' && (
           <div
             className={`tile-property-panel ${getExpandDirection()}`}
+            style={
+              gameState.config.mapId !== 'india' && flagUrl
+                ? {
+                  backgroundImage: `linear-gradient(rgba(20, 20, 20, 0.75), rgba(20, 20, 20, 0.9)), url(${flagUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }
+                : undefined
+            }
             onClick={(e) => {
               e.stopPropagation();
               // User wants: "click again on the panel... it disappears"
@@ -250,8 +265,30 @@ export const Board: React.FC<BoardProps> = ({
           >
             {/* Close button removed as per request */}
 
-            <div className="panel-header" style={{ background: tile.group ? `var(--group-${tile.group})` : '#444' }}>
-              {tile.name}
+            <div
+              className="panel-header"
+              style={{
+                background:
+                  gameState.config.mapId !== 'india' && flagUrl
+                    ? 'transparent' // User wants "same background", so let parent show through
+                    : tile.group
+                      ? `var(--group-${tile.group})`
+                      : '#444',
+                textShadow:
+                  gameState.config.mapId !== 'india' && flagUrl ? '0 1px 4px rgba(0,0,0,0.9)' : 'none',
+                borderBottom: gameState.config.mapId !== 'india' && flagUrl ? 'none' : undefined,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <div>{tile.name}</div>
+              {tile.nativeName && (
+                <div style={{ fontSize: '0.75em', opacity: 0.9, marginTop: '0px', fontWeight: '400' }}>
+                  {tile.nativeName}
+                </div>
+              )}
             </div>
 
             <div className="panel-body">
@@ -290,8 +327,16 @@ export const Board: React.FC<BoardProps> = ({
             </div>
 
             <div className="panel-footer">
-              <div className="panel-stat"><span className="panel-stat-icon">💰</span> {currency}{tile.price}</div>
-              {tile.houseCost && <div className="panel-stat"><span className="panel-stat-icon">🏠</span> {currency}{tile.houseCost}</div>}
+              <div className="panel-stat">
+                <span className="panel-stat-icon">💰</span> {currency}
+                {tile.price}
+              </div>
+              {tile.houseCost !== undefined && (
+                <div className="panel-stat">
+                  <span className="panel-stat-icon">🏠</span> {currency}
+                  {tile.houseCost}
+                </div>
+              )}
             </div>
 
             {/* Owner Actions */}
@@ -357,7 +402,7 @@ export const Board: React.FC<BoardProps> = ({
 
   return (
     <div className="board-wrapper">
-      <div className="monopoly-board-container">
+      <div className={`monopoly-board-container map-${gameState.config.mapId}`}>
         {/* Corners */}
         {renderCorner(board[goIdx], 'br')}
         {renderCorner(board[jailIdx], 'bl')}
@@ -394,10 +439,6 @@ export const Board: React.FC<BoardProps> = ({
               The task said "expand to center". If I replace content, I lose dice visibility. 
               But usually looking at property details is a focused action.
               I'll render logs/dice ONLY if !expandedTile for cleanliness.
-          */}
-
-          {/* KEEP CENTER CONTENT VISIBLE AUTOMATICALLY */}
-          {/* If expandedTile exists, it renders ON TOP via z-index. */}
 
           {gameState.dice && gameState.dice[0] > 0 && (
             <div className="dice-container">
@@ -412,7 +453,7 @@ export const Board: React.FC<BoardProps> = ({
             </div>
           )}
 
-          {/* Action Log in Center */}
+        {/* Action Log in Center */}
           <div className="action-log-center">
             <div className="action-log-header">📜 Game Log</div>
             <div className="action-log-content">
@@ -472,6 +513,6 @@ export const Board: React.FC<BoardProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };

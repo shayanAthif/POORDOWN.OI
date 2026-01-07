@@ -1,42 +1,516 @@
 [
-  { "id": "go", "name": "START", "type": "GO", "icon": "▶▶" },
-  { "id": "med_ave", "name": "Thessaloniki", "type": "PROPERTY", "price": 60, "rent": [2, 10, 30, 90, 160, 250], "group": "BROWN", "icon": "🇬🇷", "houseCost": 50 },
-  { "id": "cc1", "name": "Treasure", "type": "COMMUNITY_CHEST", "icon": "📦" },
-  { "id": "baltic_ave", "name": "Athens", "type": "PROPERTY", "price": 60, "rent": [4, 20, 60, 180, 320, 450], "group": "BROWN", "icon": "🇬🇷", "houseCost": 50 },
-  { "id": "income_tax", "name": "Income Tax", "type": "TAX", "price": 200, "icon": "💸" },
-  { "id": "reading_rr", "name": "TLV Airport", "type": "RAILROAD", "price": 200, "rent": [25, 50, 100, 200], "icon": "✈️" },
-  { "id": "or_ave", "name": "Rome", "type": "PROPERTY", "price": 100, "rent": [6, 30, 90, 270, 400, 550], "group": "LIGHT_BLUE", "icon": "🇮🇹", "houseCost": 50 },
-  { "id": "chance1", "name": "Surprise", "type": "CHANCE", "icon": "❓" },
-  { "id": "vt_ave", "name": "Milan", "type": "PROPERTY", "price": 100, "rent": [6, 30, 90, 270, 400, 550], "group": "LIGHT_BLUE", "icon": "🇮🇹", "houseCost": 50 },
-  { "id": "ct_ave", "name": "Venice", "type": "PROPERTY", "price": 120, "rent": [8, 40, 100, 300, 450, 600], "group": "LIGHT_BLUE", "icon": "🇮🇹", "houseCost": 50 },
-  { "id": "jail", "name": "In Prison", "type": "JAIL", "icon": "🔒" },
-  { "id": "st_charles", "name": "Barcelona", "type": "PROPERTY", "price": 140, "rent": [10, 50, 150, 450, 625, 750], "group": "PINK", "icon": "🇪🇸", "houseCost": 100 },
-  { "id": "electric", "name": "Electric Company", "type": "UTILITY", "price": 150, "icon": "⚡" },
-  { "id": "states_ave", "name": "Seville", "type": "PROPERTY", "price": 140, "rent": [10, 50, 150, 450, 625, 750], "group": "PINK", "icon": "🇪🇸", "houseCost": 100 },
-  { "id": "va_ave", "name": "Madrid", "type": "PROPERTY", "price": 160, "rent": [12, 60, 180, 500, 700, 900], "group": "PINK", "icon": "🇪🇸", "houseCost": 100 },
-  { "id": "penn_rr", "name": "MUC Airport", "type": "RAILROAD", "price": 200, "rent": [25, 50, 100, 200], "icon": "✈️" },
-  { "id": "st_james", "name": "Munich", "type": "PROPERTY", "price": 180, "rent": [14, 70, 200, 550, 750, 950], "group": "ORANGE", "icon": "🇩🇪", "houseCost": 100 },
-  { "id": "cc2", "name": "Treasure", "type": "COMMUNITY_CHEST", "icon": "📦" },
-  { "id": "tn_ave", "name": "Frankfurt", "type": "PROPERTY", "price": 180, "rent": [14, 70, 200, 550, 750, 950], "group": "ORANGE", "icon": "🇩🇪", "houseCost": 100 },
-  { "id": "ny_ave", "name": "Berlin", "type": "PROPERTY", "price": 200, "rent": [16, 80, 220, 600, 800, 1000], "group": "ORANGE", "icon": "🇩🇪", "houseCost": 100 },
-  { "id": "free_parking", "name": "Vacation", "type": "FREE_PARKING", "icon": "🚗" },
-  { "id": "ky_ave", "name": "Shenzhen", "type": "PROPERTY", "price": 220, "rent": [18, 90, 250, 700, 875, 1050], "group": "RED", "icon": "🇨🇳", "houseCost": 150 },
-  { "id": "chance2", "name": "Surprise", "type": "CHANCE", "icon": "❓" },
-  { "id": "in_ave", "name": "Beijing", "type": "PROPERTY", "price": 220, "rent": [18, 90, 250, 700, 875, 1050], "group": "RED", "icon": "🇨🇳", "houseCost": 150 },
-  { "id": "il_ave", "name": "Shanghai", "type": "PROPERTY", "price": 240, "rent": [20, 100, 300, 750, 925, 1100], "group": "RED", "icon": "🇨🇳", "houseCost": 150 },
-  { "id": "bo_rr", "name": "CDG Airport", "type": "RAILROAD", "price": 200, "rent": [25, 50, 100, 200], "icon": "✈️" },
-  { "id": "atl_ave", "name": "Lyon", "type": "PROPERTY", "price": 260, "rent": [22, 110, 330, 800, 975, 1150], "group": "YELLOW", "icon": "🇫🇷", "houseCost": 150 },
-  { "id": "ven_ave", "name": "Toulouse", "type": "PROPERTY", "price": 260, "rent": [22, 110, 330, 800, 975, 1150], "group": "YELLOW", "icon": "🇫🇷", "houseCost": 150 },
-  { "id": "water", "name": "Water Company", "type": "UTILITY", "price": 150, "icon": "💧" },
-  { "id": "mar_ave", "name": "Paris", "type": "PROPERTY", "price": 280, "rent": [24, 120, 360, 850, 1025, 1200], "group": "YELLOW", "icon": "🇫🇷", "houseCost": 150 },
-  { "id": "go_to_jail", "name": "Go to prison", "type": "GO_TO_JAIL", "icon": "👮" },
-  { "id": "pac_ave", "name": "Liverpool", "type": "PROPERTY", "price": 300, "rent": [26, 130, 390, 900, 1100, 1275], "group": "GREEN", "icon": "🇬🇧", "houseCost": 200 },
-  { "id": "nc_ave", "name": "Manchester", "type": "PROPERTY", "price": 300, "rent": [26, 130, 390, 900, 1100, 1275], "group": "GREEN", "icon": "🇬🇧", "houseCost": 200 },
-  { "id": "cc3", "name": "Treasure", "type": "COMMUNITY_CHEST", "icon": "📦" },
-  { "id": "pa_ave", "name": "London", "type": "PROPERTY", "price": 320, "rent": [28, 150, 450, 1000, 1200, 1400], "group": "GREEN", "icon": "🇬🇧", "houseCost": 200 },
-  { "id": "sl_rr", "name": "JFK Airport", "type": "RAILROAD", "price": 200, "rent": [25, 50, 100, 200], "icon": "✈️" },
-  { "id": "chance3", "name": "Surprise", "type": "CHANCE", "icon": "❓" },
-  { "id": "park_ave", "name": "San Francisco", "type": "PROPERTY", "price": 350, "rent": [35, 175, 500, 1100, 1300, 1500], "group": "DARK_BLUE", "icon": "🇺🇸", "houseCost": 200 },
-  { "id": "luxury_tax", "name": "Luxury Tax", "type": "TAX", "price": 100, "icon": "💎" },
-  { "id": "boardwalk", "name": "New York", "type": "PROPERTY", "price": 400, "rent": [50, 200, 600, 1400, 1700, 2000], "group": "DARK_BLUE", "icon": "🇺🇸", "houseCost": 200 }
+  {
+    "id": "go",
+    "name": "START",
+    "type": "GO",
+    "icon": "◀◀"
+  },
+  {
+    "id": "med_ave",
+    "name": "Thessaloniki",
+    "type": "PROPERTY",
+    "price": 60,
+    "rent": [
+      2,
+      10,
+      30,
+      90,
+      160,
+      250
+    ],
+    "group": "BROWN",
+    "icon": "🇬🇷",
+    "houseCost": 50
+  },
+  {
+    "id": "cc1",
+    "name": "Treasure",
+    "type": "COMMUNITY_CHEST",
+    "icon": "📦"
+  },
+  {
+    "id": "baltic_ave",
+    "name": "Athens",
+    "type": "PROPERTY",
+    "price": 60,
+    "rent": [
+      4,
+      20,
+      60,
+      180,
+      320,
+      450
+    ],
+    "group": "BROWN",
+    "icon": "🇬🇷",
+    "houseCost": 50
+  },
+  {
+    "id": "income_tax",
+    "name": "Income Tax",
+    "type": "TAX",
+    "price": 200,
+    "icon": "💸"
+  },
+  {
+    "id": "reading_rr",
+    "name": "TLV Airport",
+    "type": "RAILROAD",
+    "price": 200,
+    "rent": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "icon": "✈️"
+  },
+  {
+    "id": "or_ave",
+    "name": "Rome",
+    "type": "PROPERTY",
+    "price": 100,
+    "rent": [
+      6,
+      30,
+      90,
+      270,
+      400,
+      550
+    ],
+    "group": "LIGHT_BLUE",
+    "icon": "🇮🇹",
+    "houseCost": 50
+  },
+  {
+    "id": "chance1",
+    "name": "Surprise",
+    "type": "CHANCE",
+    "icon": "❓"
+  },
+  {
+    "id": "vt_ave",
+    "name": "Milan",
+    "type": "PROPERTY",
+    "price": 100,
+    "rent": [
+      6,
+      30,
+      90,
+      270,
+      400,
+      550
+    ],
+    "group": "LIGHT_BLUE",
+    "icon": "🇮🇹",
+    "houseCost": 50
+  },
+  {
+    "id": "ct_ave",
+    "name": "Venice",
+    "type": "PROPERTY",
+    "price": 120,
+    "rent": [
+      8,
+      40,
+      100,
+      300,
+      450,
+      600
+    ],
+    "group": "LIGHT_BLUE",
+    "icon": "🇮🇹",
+    "houseCost": 50
+  },
+  {
+    "id": "jail",
+    "name": "In Prison",
+    "type": "JAIL",
+    "icon": "🔒"
+  },
+  {
+    "id": "st_charles",
+    "name": "Barcelona",
+    "type": "PROPERTY",
+    "price": 140,
+    "rent": [
+      10,
+      50,
+      150,
+      450,
+      625,
+      750
+    ],
+    "group": "PINK",
+    "icon": "🇪🇸",
+    "houseCost": 100
+  },
+  {
+    "id": "electric",
+    "name": "Electric Company",
+    "type": "UTILITY",
+    "price": 150,
+    "icon": "⚡"
+  },
+  {
+    "id": "states_ave",
+    "name": "Seville",
+    "type": "PROPERTY",
+    "price": 140,
+    "rent": [
+      10,
+      50,
+      150,
+      450,
+      625,
+      750
+    ],
+    "group": "PINK",
+    "icon": "🇪🇸",
+    "houseCost": 100
+  },
+  {
+    "id": "va_ave",
+    "name": "Madrid",
+    "type": "PROPERTY",
+    "price": 160,
+    "rent": [
+      12,
+      60,
+      180,
+      500,
+      700,
+      900
+    ],
+    "group": "PINK",
+    "icon": "🇪🇸",
+    "houseCost": 100
+  },
+  {
+    "id": "penn_rr",
+    "name": "MUC Airport",
+    "type": "RAILROAD",
+    "price": 200,
+    "rent": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "icon": "✈️"
+  },
+  {
+    "id": "st_james",
+    "name": "Munich",
+    "type": "PROPERTY",
+    "price": 180,
+    "rent": [
+      14,
+      70,
+      200,
+      550,
+      750,
+      950
+    ],
+    "group": "ORANGE",
+    "icon": "🇩🇪",
+    "houseCost": 100
+  },
+  {
+    "id": "cc2",
+    "name": "Treasure",
+    "type": "COMMUNITY_CHEST",
+    "icon": "📦"
+  },
+  {
+    "id": "tn_ave",
+    "name": "Frankfurt",
+    "type": "PROPERTY",
+    "price": 180,
+    "rent": [
+      14,
+      70,
+      200,
+      550,
+      750,
+      950
+    ],
+    "group": "ORANGE",
+    "icon": "🇩🇪",
+    "houseCost": 100
+  },
+  {
+    "id": "ny_ave",
+    "name": "Berlin",
+    "type": "PROPERTY",
+    "price": 200,
+    "rent": [
+      16,
+      80,
+      220,
+      600,
+      800,
+      1000
+    ],
+    "group": "ORANGE",
+    "icon": "🇩🇪",
+    "houseCost": 100
+  },
+  {
+    "id": "free_parking",
+    "name": "Vacation",
+    "type": "FREE_PARKING",
+    "icon": "🚗"
+  },
+  {
+    "id": "ky_ave",
+    "name": "Shenzhen",
+    "type": "PROPERTY",
+    "price": 220,
+    "rent": [
+      18,
+      90,
+      250,
+      700,
+      875,
+      1050
+    ],
+    "group": "RED",
+    "icon": "🇨🇳",
+    "houseCost": 150
+  },
+  {
+    "id": "chance2",
+    "name": "Surprise",
+    "type": "CHANCE",
+    "icon": "❓"
+  },
+  {
+    "id": "in_ave",
+    "name": "Beijing",
+    "type": "PROPERTY",
+    "price": 220,
+    "rent": [
+      18,
+      90,
+      250,
+      700,
+      875,
+      1050
+    ],
+    "group": "RED",
+    "icon": "🇨🇳",
+    "houseCost": 150
+  },
+  {
+    "id": "il_ave",
+    "name": "Shanghai",
+    "type": "PROPERTY",
+    "price": 240,
+    "rent": [
+      20,
+      100,
+      300,
+      750,
+      925,
+      1100
+    ],
+    "group": "RED",
+    "icon": "🇨🇳",
+    "houseCost": 150
+  },
+  {
+    "id": "bo_rr",
+    "name": "CDG Airport",
+    "type": "RAILROAD",
+    "price": 200,
+    "rent": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "icon": "✈️"
+  },
+  {
+    "id": "atl_ave",
+    "name": "Lyon",
+    "type": "PROPERTY",
+    "price": 260,
+    "rent": [
+      22,
+      110,
+      330,
+      800,
+      975,
+      1150
+    ],
+    "group": "YELLOW",
+    "icon": "🇫🇷",
+    "houseCost": 150
+  },
+  {
+    "id": "ven_ave",
+    "name": "Toulouse",
+    "type": "PROPERTY",
+    "price": 260,
+    "rent": [
+      22,
+      110,
+      330,
+      800,
+      975,
+      1150
+    ],
+    "group": "YELLOW",
+    "icon": "🇫🇷",
+    "houseCost": 150
+  },
+  {
+    "id": "water",
+    "name": "Water Company",
+    "type": "UTILITY",
+    "price": 150,
+    "icon": "💧"
+  },
+  {
+    "id": "mar_ave",
+    "name": "Paris",
+    "type": "PROPERTY",
+    "price": 280,
+    "rent": [
+      24,
+      120,
+      360,
+      850,
+      1025,
+      1200
+    ],
+    "group": "YELLOW",
+    "icon": "🇫🇷",
+    "houseCost": 150
+  },
+  {
+    "id": "go_to_jail",
+    "name": "Go to prison",
+    "type": "GO_TO_JAIL",
+    "icon": "👮"
+  },
+  {
+    "id": "pac_ave",
+    "name": "Liverpool",
+    "type": "PROPERTY",
+    "price": 300,
+    "rent": [
+      26,
+      130,
+      390,
+      900,
+      1100,
+      1275
+    ],
+    "group": "GREEN",
+    "icon": "🇬🇧",
+    "houseCost": 200
+  },
+  {
+    "id": "nc_ave",
+    "name": "Manchester",
+    "type": "PROPERTY",
+    "price": 300,
+    "rent": [
+      26,
+      130,
+      390,
+      900,
+      1100,
+      1275
+    ],
+    "group": "GREEN",
+    "icon": "🇬🇧",
+    "houseCost": 200
+  },
+  {
+    "id": "cc3",
+    "name": "Treasure",
+    "type": "COMMUNITY_CHEST",
+    "icon": "📦"
+  },
+  {
+    "id": "pa_ave",
+    "name": "London",
+    "type": "PROPERTY",
+    "price": 320,
+    "rent": [
+      28,
+      150,
+      450,
+      1000,
+      1200,
+      1400
+    ],
+    "group": "GREEN",
+    "icon": "🇬🇧",
+    "houseCost": 200
+  },
+  {
+    "id": "sl_rr",
+    "name": "JFK Airport",
+    "type": "RAILROAD",
+    "price": 200,
+    "rent": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "icon": "✈️"
+  },
+  {
+    "id": "chance3",
+    "name": "Surprise",
+    "type": "CHANCE",
+    "icon": "❓"
+  },
+  {
+    "id": "park_ave",
+    "name": "San\nFrancisco",
+    "type": "PROPERTY",
+    "price": 350,
+    "rent": [
+      35,
+      175,
+      500,
+      1100,
+      1300,
+      1500
+    ],
+    "group": "DARK_BLUE",
+    "icon": "🇺🇸",
+    "houseCost": 200
+  },
+  {
+    "id": "luxury_tax",
+    "name": "Luxury Tax",
+    "type": "TAX",
+    "price": 100,
+    "icon": "💎"
+  },
+  {
+    "id": "boardwalk",
+    "name": "New York",
+    "type": "PROPERTY",
+    "price": 400,
+    "rent": [
+      50,
+      200,
+      600,
+      1400,
+      1700,
+      2000
+    ],
+    "group": "DARK_BLUE",
+    "icon": "🇺🇸",
+    "houseCost": 200
+  }
 ]

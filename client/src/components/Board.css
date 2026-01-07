@@ -33,13 +33,26 @@
   height: var(--board-height);
   min-width: 350px;
   min-height: 350px;
-  background: linear-gradient(to bottom, rgba(255, 153, 51, 0.15), rgba(255, 255, 255, 0.05), rgba(19, 136, 8, 0.15)), #1a1a2e;
+  /* Default Dark Blue Background for Classic */
+  background-color: #1a1a2e;
   border-radius: 8px;
   display: grid;
   grid-template-columns: var(--corner-width) 1fr var(--corner-width);
   grid-template-rows: var(--corner-height) 1fr var(--corner-height);
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
   border: 3px solid #2d2d4a;
+}
+
+/* India Map Specific Background */
+.monopoly-board-container.map-india {
+  background: linear-gradient(to bottom,
+      rgba(255, 153, 51, 0.15) 0%,
+      /* Saffron */
+      rgba(255, 255, 255, 0.05) 50%,
+      /* White */
+      rgba(19, 136, 8, 0.15) 100%
+      /* Green */
+    ), #1a1a2e;
 }
 
 /* --- TILE STRIPS --- */
@@ -123,15 +136,18 @@
   /* Bold as requested */
   text-transform: uppercase;
   /* Antonio is condensed but readable. Good for Ostrich substitute. */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: pre-line;
+  /* Allow newlines for San Francisco */
+  overflow: visible;
+  /* text-overflow: ellipsis; Removed to show full name */
   letter-spacing: 0px;
   /* Condensed */
   font-size: 0.75rem;
   /* Smaller to fit */
   width: 95%;
   /* Prevent edge touching */
+  line-height: 0.9;
+  /* Tighter line height for multi-line support */
 
   /* Center text (ellipsis works best with block/inline-block, tile-content centers flex item) */
   text-align: center;
@@ -670,37 +686,7 @@
 }
 
 /* --- PROPERTY GROUP COLORS (Richup Style) --- */
-.group-BROWN {
-  background: linear-gradient(135deg, #8b5a2b, #6b4423);
-}
-
-.group-LIGHT_BLUE {
-  background: linear-gradient(135deg, #87ceeb, #5fb3d4);
-}
-
-.group-PINK {
-  background: linear-gradient(135deg, #c850c0, #9c27b0);
-}
-
-.group-ORANGE {
-  background: linear-gradient(135deg, #ff9800, #e65100);
-}
-
-.group-RED {
-  background: linear-gradient(135deg, #f44336, #c62828);
-}
-
-.group-YELLOW {
-  background: linear-gradient(135deg, #ffeb3b, #fbc02d);
-}
-
-.group-GREEN {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
-}
-
-.group-DARK_BLUE {
-  background: linear-gradient(135deg, #3f51b5, #1a237e);
-}
+/* Group gradients removed to support clean Classic Map */
 
 /* --- TILE HIGHLIGHTING DURING ANIMATION --- */
 .tile-base.highlighted {
@@ -947,13 +933,24 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   overflow: hidden;
-  /* Fixed Dimensions for Stability */
-  width: 220px;
-  height: 260px;
-  /* Fixed height to prevent jumping */
-  display: flex;
-  flex-direction: column;
+
+  /* STRICT FIXED DIMENSIONS */
+  width: 250px !important;
+  /* Fixed width */
+  height: 335px !important;
+  /* Strict fixed height */
+  min-height: 335px !important;
+  max-height: 335px !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  flex-direction: column !important;
   pointer-events: auto;
+
+  /* Disable animation to prevent visual resizing/jumping */
+  animation: none !important;
+  transition: opacity 0.2s ease-out;
+  /* Only fade opacity if needed */
 }
 
 /* Position overrides (Pixel-based to match arrow size) */
@@ -1108,7 +1105,7 @@
 @keyframes expandUp {
   0% {
     opacity: 0;
-    transform: translateX(-50%) scale(0.9);
+    transform: translateX(-50%) scale(1);
   }
 
   100% {
@@ -1120,7 +1117,7 @@
 @keyframes expandDown {
   0% {
     opacity: 0;
-    transform: translateX(-50%) scale(0.9);
+    transform: translateX(-50%) scale(1);
   }
 
   100% {
@@ -1132,7 +1129,7 @@
 @keyframes expandRight {
   0% {
     opacity: 0;
-    transform: translateY(-50%) scale(0.9);
+    transform: translateY(-50%) scale(1);
   }
 
   100% {
@@ -1144,7 +1141,7 @@
 @keyframes expandLeft {
   0% {
     opacity: 0;
-    transform: translateY(-50%) scale(0.9);
+    transform: translateY(-50%) scale(1);
   }
 
   100% {
@@ -1296,6 +1293,18 @@
 
 /* Tax Tiles - Fix layout */
 
+/* Long Name Fixes (Force Single Line) */
+.tile-med_ave .tile-name,
+/* Thessaloniki */
+.tile-nc_ave .tile-name,
+/* Manchester */
+.tile-pac_ave .tile-name {
+  /* Liverpool (just in case) */
+  white-space: nowrap !important;
+  font-size: 0.6rem !important;
+  /* Shrink to fit */
+}
+
 /* INCOME TAX (Bottom Side - Horizontal Tile) */
 .tile-income_tax .tile-content {
   flex-direction: column;
@@ -1421,6 +1430,45 @@
   font-family: 'Noto Sans', sans-serif;
 }
 
+/* Flag Emoji Watermark (Classic Map Fallback) */
+.tile-watermark.is-flag-emoji {
+  font-size: 4rem;
+  opacity: 0.2;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Flag IMAGE Watermark (Classic Map Primary) */
+.tile-watermark.is-flag-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  /* Cover the entire tile */
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.12;
+  /* Somewhat lighter */
+  filter: saturate(1.3);
+  /* Colors present but not overwhelming */
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  /* Force reset transforms (Fixes Top/Bottom) */
+  border-radius: inherit;
+  /* Match tile corners */
+  z-index: 0;
+}
+
+/* Rotate Classic Map Flag Backgrounds on Sides to match orientation */
+.side-left .tile-watermark.is-flag-image {
+  transform: rotate(90deg) !important;
+}
+
+.side-right .tile-watermark.is-flag-image {
+  transform: rotate(-90deg) !important;
+}
+
 /* Adjustments for different sides to place watermark between Flag(Outer) and Name(Inner) */
 /* Bottom Row: Flag at Top (Outer). Name at Top (Inner). Position Watermark near Top Edge. */
 .side-bottom .tile-watermark {
@@ -1430,11 +1478,13 @@
 }
 
 /* Top Row: Flag at Bottom (Outer). Name at Bottom (Inner). Position Watermark near Bottom Edge. */
+/* Top Row: Flag at Bottom (Outer). Name at Bottom (Inner). Position Watermark near Bottom Edge. */
 .side-top .tile-watermark {
   top: auto;
   bottom: 25%;
   left: 50%;
-  transform: translate(-50%, 50%) rotate(180deg);
+  transform: translate(-50%, 50%);
+  /* Removed rotation to keep upright */
 }
 
 /* Left Row: Flag at Right (Outer). Name at Right (Inner). Position Watermark near Right Edge. */
@@ -1456,6 +1506,15 @@
 /* Ensure watermarks don't overflow small tiles but ALLOW flags to pop out */
 .tile-base {
   overflow: visible;
+  /* Default background for Classic Map */
+  background-color: #2b2b40;
+  /* Or whatever the purple default is */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.monopoly-board-container:not(.map-india) .tile-base {
+  background-color: #2b2b40 !important;
+  /* Force purple */
 }
 
 .tile-content {
@@ -1478,64 +1537,87 @@
   /* Follow tile curvature if any */
 }
 
+/* Restrict watermark container to exclude price bar area on Classic Map */
+.monopoly-board-container:not(.map-india) .side-bottom .watermark-container {
+  height: auto;
+  top: 0;
+  bottom: 28px;
+  /* Tightly truncated at price bar */
+}
+
+.monopoly-board-container:not(.map-india) .side-top .watermark-container {
+  height: auto;
+  bottom: 0;
+  top: 28px;
+}
+
+.monopoly-board-container:not(.map-india) .side-left .watermark-container {
+  width: auto;
+  left: 26px;
+  /* Exclude Left Price Bar */
+  right: 0;
+}
+
+.monopoly-board-container:not(.map-india) .side-right .watermark-container {
+  width: auto;
+  right: 26px;
+  /* Exclude Right Price Bar */
+  left: 0;
+}
+
 /* Update child watermark to index 0 relative to wrapper, wrapper handles z-index */
 .tile-watermark {
   z-index: 0;
 }
 
-
-/* --- TILE BACKGROUNDS (Light/Tinted per Group) --- */
-/* Overrides default tile background */
-
-.tile-base.group-BROWN {
-  background: #2d2420;
-  /* Very dark brown tint */
-  border-color: #5d4037;
+/* --- INDIA MAP SPECIFIC STYLING --- */
+/* Distinct, light background colors for each state (group) */
+.monopoly-board-container.map-india .tile-base.group-BROWN {
+  background-color: rgba(139, 69, 19, 0.1) !important;
 }
 
-.tile-base.group-LIGHT_BLUE {
-  background: #1a252f;
-  /* Dark blue-ish tint */
-  border-color: #2980b9;
+.monopoly-board-container.map-india .tile-base.group-LIGHT_BLUE {
+  background-color: rgba(135, 206, 235, 0.1) !important;
 }
 
-.tile-base.group-PINK {
-  background: #2e1a26;
-  /* Dark pink tint */
-  border-color: #8e44ad;
+.monopoly-board-container.map-india .tile-base.group-PINK {
+  background-color: rgba(255, 105, 180, 0.1) !important;
 }
 
-.tile-base.group-ORANGE {
-  background: #2e201a;
-  /* Dark orange tint */
-  border-color: #d35400;
+.monopoly-board-container.map-india .tile-base.group-ORANGE {
+  background-color: rgba(255, 165, 0, 0.1) !important;
 }
 
-.tile-base.group-RED {
-  background: #2e1a1a;
-  /* Dark red tint */
-  border-color: #c0392b;
+.monopoly-board-container.map-india .tile-base.group-RED {
+  background-color: rgba(255, 69, 58, 0.1) !important;
 }
 
-.tile-base.group-YELLOW {
-  background: #2e2e1a;
-  /* Dark yellow/olive tint */
-  border-color: #f1c40f;
+.monopoly-board-container.map-india .tile-base.group-YELLOW {
+  background-color: rgba(255, 215, 0, 0.08) !important;
 }
 
-.tile-base.group-GREEN {
-  background: #1a2e1a;
-  /* Dark green tint */
-  border-color: #27ae60;
+.monopoly-board-container.map-india .tile-base.group-GREEN {
+  background-color: rgba(46, 204, 113, 0.1) !important;
 }
 
-.tile-base.group-DARK_BLUE {
-  background: #1a1a35;
-  /* Indigo tint */
-  border-color: #34495e;
+.monopoly-board-container.map-india .tile-base.group-DARK_BLUE {
+  background-color: rgba(0, 0, 139, 0.15) !important;
 }
 
-/* Hover effects to brighten them slightly */
+/* Ensure India watermarks (text) are visible against these backgrounds */
+.monopoly-board-container.map-india .tile-watermark {
+  opacity: 0.15;
+  color: #fff;
+}
+
+/* Shift side watermarks down to avoid flag overlap on India Map */
+.monopoly-board-container.map-india .side-left .tile-watermark,
+.monopoly-board-container.map-india .side-right .tile-watermark {
+  top: 65% !important;
+}
+
+
+/* Unscoped group backgrounds removed to prevent affecting Classic Map */
 .tile-base[class*='group-']:hover {
   filter: brightness(1.2);
 }

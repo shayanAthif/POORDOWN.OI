@@ -27,6 +27,7 @@ export interface Tile {
   houses: number;
   houseCost?: number;
   isMortgaged: boolean;
+  nativeName?: string;
 }
 
 export interface Player {
