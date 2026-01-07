@@ -16,15 +16,18 @@
 /* Dynamic board sizing - uses vmin for square aspect ratio */
 .monopoly-board-container {
   /* Sidebars are 540px. Add minimal padding. maximize size independently. */
-  --board-width: max(350px, calc(100vw - 550px));
-  --board-height: max(350px, calc(100vh - 20px));
-  
+  /* Calculate the maximum square size that fits in the available space */
+  --board-size: max(350px, min(calc(100vw - 570px), calc(100vh - 40px)));
+
+  --board-width: var(--board-size);
+  --board-height: var(--board-size);
+
   --corner-width: calc(var(--board-width) * 0.125);
   --corner-height: calc(var(--board-height) * 0.125);
 
   --tile-width: calc((var(--board-width) - (var(--corner-width) * 2)) / 9);
   --tile-height: calc((var(--board-height) - (var(--corner-height) * 2)) / 9);
-  
+
   position: relative;
   width: var(--board-width);
   height: var(--board-height);
@@ -35,7 +38,7 @@
   display: grid;
   grid-template-columns: var(--corner-width) 1fr var(--corner-width);
   grid-template-rows: var(--corner-height) 1fr var(--corner-height);
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
   border: 3px solid #2d2d4a;
 }
 
@@ -71,9 +74,12 @@
 /* --- BASE TILE --- */
 /* --- BASE TILE RE-DESIGN --- */
 .tile-base {
-  flex: 1 1 0; /* Force equal sizing, ignore content size */
-  min-width: 0; /* Allow shrinking */
-  min-height: 0; /* Allow shrinking */
+  flex: 1 1 0;
+  /* Force equal sizing, ignore content size */
+  min-width: 0;
+  /* Allow shrinking */
+  min-height: 0;
+  /* Allow shrinking */
   position: relative;
   background: #252542;
   border: 1px solid #1a1a2e;
@@ -87,7 +93,7 @@
 .tile-base:hover {
   z-index: 100;
   transform: scale(1.3);
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
   border-radius: 4px;
 }
 
@@ -99,30 +105,82 @@
 .tile-base.owned .tile-name {
   color: #000;
   font-weight: bold;
-  text-shadow: 0 0 2px rgba(255,255,255,0.5);
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
 .tile-base.owned .tile-icon {
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* Side Specific Rotations & Layouts. 
+/* --- PROPERTY ALIGNMENT (Countries on Top) --- */
+/* "Top" means Inner side (towards flag).
+   Others (Railroads, etc) stay centered. */
+
+/* Apply STRONG, TALL font for Countries */
+.type-PROPERTY .tile-name {
+  font-family: 'Antonio', sans-serif;
+  font-weight: 700;
+  /* Bold as requested */
+  text-transform: uppercase;
+  /* Antonio is condensed but readable. Good for Ostrich substitute. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0px;
+  /* Condensed */
+  font-size: 0.75rem;
+  /* Smaller to fit */
+  width: 95%;
+  /* Prevent edge touching */
+
+  /* Center text (ellipsis works best with block/inline-block, tile-content centers flex item) */
+  text-align: center;
+}
+
+/* Specific side adjustments if needed for font fitting */
+/* (Currently empty, relying on defaults) */
+
+/* --- ROTATE SIDE FLAGS --- */
+.side-left .tile-flag img {
+  transform: rotate(90deg);
+}
+
+.side-right .tile-flag img {
+  transform: rotate(-90deg);
+}
+
+/* Side Specific Rotations & Layouts.
    Goal: Name on Inner side (near flag), Price on Outer side. */
-.side-bottom { 
-  flex-direction: column; /* Start Top(Inner) -> Name..Price -> Bottom(Outer) */
-  padding-top: 15px; /* Space for flag at Top */
+.side-bottom {
+  flex-direction: column;
+  /* Start Top(Inner) -> Name..Price -> Bottom(Outer) */
+  padding-top: 28px;
+  /* SPACIER: Increased from 15px */
 }
-.side-top { 
-  flex-direction: column-reverse; /* Start Bottom(Inner) -> Name..Price -> Top(Outer) */
-  padding-bottom: 15px; /* Space for flag at Bottom */
+
+.side-top {
+  flex-direction: column-reverse;
+  /* Start Bottom(Inner) -> Name..Price -> Top(Outer) */
+  padding-bottom: 28px;
+  /* SPACIER: Increased from 15px */
 }
-.side-left { 
-  flex-direction: row-reverse; /* Start Right(Inner) -> Name..Price -> Left(Outer) */
-  padding-right: 15px; /* Space for flag at Right */
+
+.side-left {
+  flex-direction: row-reverse;
+  /* Start Right(Inner) -> Name..Price -> Left(Outer) */
+  padding-right: 15px;
+  /* Space for flag at Right */
+  justify-content: center;
+  /* Center aligned */
 }
-.side-right { 
-  flex-direction: row; /* Start Left(Inner) -> Name..Price -> Right(Outer) */
-  padding-left: 15px; /* Space for flag at Left */
+
+.side-right {
+  flex-direction: row;
+  /* Start Left(Inner) -> Name..Price -> Right(Outer) */
+  padding-left: 15px;
+  /* Space for flag at Left */
+  justify-content: center;
+  /* Center aligned */
 }
 
 /* --- COLOR BAR (Property Header) --- */
@@ -130,12 +188,14 @@
   flex-shrink: 0;
 }
 
-.side-top .color-bar, .side-bottom .color-bar {
+.side-top .color-bar,
+.side-bottom .color-bar {
   height: 18px;
   width: 100%;
 }
 
-.side-left .color-bar, .side-right .color-bar {
+.side-left .color-bar,
+.side-right .color-bar {
   width: 18px;
   height: 100%;
 }
@@ -145,18 +205,30 @@
   order: 2;
 }
 
+/* --- TILE CONTENT WRAPPER --- */
+.tile-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* Anchor for absolute children */
+}
+
 /* --- TILE CONTENT --- */
 /* Flag Positioning - overlapping inner edge */
 /* Flag Positioning - overlapping OUTER edge (Front of tile) */
 .tile-flag {
   position: absolute;
-  width: 40px; 
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 2px solid white;
   overflow: hidden;
   z-index: 5;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .tile-flag img {
@@ -167,7 +239,7 @@
 
 .tile-icon {
   position: absolute;
-  width: 40px; 
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   background: #1e1e32;
@@ -177,45 +249,53 @@
   justify-content: center;
   font-size: 1.5rem;
   z-index: 5;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 /* SIDE SPECIFIC POSITIONING - SWAPPED */
 /* Bottom Row: Inner is Top. Outer is Bottom.
    Flag at Inner (Top). Price at Outer (Bottom). */
-.side-bottom .tile-flag, .side-bottom .tile-icon {
-  top: -20px; 
+.side-bottom .tile-flag,
+.side-bottom .tile-icon {
+  top: -32px;
+  /* SPACIER: Moved further up (was -20px) */
   left: 50%;
   transform: translateX(-50%);
 }
+
 .side-bottom .tile-price-bar {
   bottom: 0;
   top: auto;
   border-bottom: none;
-  border-top: 1px solid rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Top Row: Inner is Bottom. Outer is Top.
    Flag at Inner (Bottom). Price at Outer (Top). */
-.side-top .tile-flag, .side-top .tile-icon {
-  bottom: -20px;
+.side-top .tile-flag,
+.side-top .tile-icon {
+  bottom: -32px;
+  /* SPACIER: Moved further down (was -20px) */
   left: 50%;
   transform: translateX(-50%);
 }
+
 .side-top .tile-price-bar {
   top: 0;
   bottom: auto;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   border-top: none;
 }
 
 /* Left Row: Inner is Right. Outer is Left.
    Flag at Inner (Right). Price at Outer (Left). */
-.side-left .tile-flag, .side-left .tile-icon {
+.side-left .tile-flag,
+.side-left .tile-icon {
   right: -20px;
   top: 50%;
   transform: translateY(-50%);
 }
+
 .side-left .tile-price-bar {
   left: 0;
   right: auto;
@@ -224,17 +304,19 @@
   width: 24px;
   height: 100%;
   writing-mode: vertical-rl;
-  border-right: 1px solid rgba(255,255,255,0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   border-left: none;
 }
 
 /* Right Row: Inner is Left. Outer is Right.
    Flag at Inner (Left). Price at Outer (Right). */
-.side-right .tile-flag, .side-right .tile-icon {
+.side-right .tile-flag,
+.side-right .tile-icon {
   left: -20px;
   top: 50%;
   transform: translateY(-50%);
 }
+
 .side-right .tile-price-bar {
   right: 0;
   left: auto;
@@ -243,7 +325,7 @@
   width: 24px;
   height: 100%;
   writing-mode: vertical-rl;
-  border-left: 1px solid rgba(255,255,255,0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-right: none;
 }
 
@@ -262,12 +344,31 @@
   color: #fff;
 }
 
+/* Vertical Text for Side Columns */
+.side-left .tile-name,
+.side-right .tile-name {
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.side-left .tile-name {
+  writing-mode: vertical-rl;
+  transform: none;
+}
+
+.side-right .tile-name {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
 /* Hide old price box */
 .tile-price {
-  display: none; 
+  display: none;
 }
+
 .tile-price.tax-price {
-  display: block; /* Keep tax price visible if needed, or move to overlap */
+  display: block;
+  /* Keep tax price visible if needed, or move to overlap */
   background: rgba(255, 100, 100, 0.5);
   color: #ffdddd;
 
@@ -283,20 +384,21 @@
   right: 0;
   bottom: 0;
   /* No background here, so color shines through! */
-  background: transparent; 
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 20;
-  pointer-events: none; /* Let clicks pass through if needed */
+  pointer-events: none;
+  /* Let clicks pass through if needed */
 }
 
 .mortgage-icon {
   font-size: 1.5rem;
   animation: float 2s ease-in-out infinite;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
   /* Give the icon itself a backing so it pops */
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -321,10 +423,29 @@
   position: relative;
 }
 
-.corner-bl { grid-column: 1 / 2; grid-row: 3 / 4; border-radius: 0 8px 0 0; }
-.corner-br { grid-column: 3 / 4; grid-row: 3 / 4; border-radius: 8px 0 0 0; }
-.corner-tl { grid-column: 1 / 2; grid-row: 1 / 2; border-radius: 0 0 8px 0; }
-.corner-tr { grid-column: 3 / 4; grid-row: 1 / 2; border-radius: 0 0 0 8px; }
+.corner-bl {
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+  border-radius: 0 8px 0 0;
+}
+
+.corner-br {
+  grid-column: 3 / 4;
+  grid-row: 3 / 4;
+  border-radius: 8px 0 0 0;
+}
+
+.corner-tl {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  border-radius: 0 0 8px 0;
+}
+
+.corner-tr {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  border-radius: 0 0 0 8px;
+}
 
 .corner-content {
   display: flex;
@@ -373,10 +494,10 @@
   font-size: 2.5rem;
   font-weight: bold;
   color: #1a1a2e;
-  box-shadow: 
-    0 8px 15px rgba(0,0,0,0.4),
-    inset 0 -3px 5px rgba(0,0,0,0.1),
-    inset 0 3px 5px rgba(255,255,255,0.8);
+  box-shadow:
+    0 8px 15px rgba(0, 0, 0, 0.4),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.1),
+    inset 0 3px 5px rgba(255, 255, 255, 0.8);
   transform: rotate(-5deg);
 }
 
@@ -404,19 +525,22 @@
   max-height: 100px;
   overflow-y: auto;
   /* Hide scrollbar for Chrome, Safari and Opera */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
 
 .action-log-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 .action-log-entry {
   font-size: 0.65rem;
   color: #a0a0b0;
   padding: 2px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .action-log-entry:last-child {
@@ -470,7 +594,8 @@
   box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
 }
 
-.buy-options, .jail-options {
+.buy-options,
+.jail-options {
   display: flex;
   gap: 8px;
 }
@@ -527,8 +652,8 @@
   width: 18px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.9);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -545,14 +670,37 @@
 }
 
 /* --- PROPERTY GROUP COLORS (Richup Style) --- */
-.group-BROWN { background: linear-gradient(135deg, #8b5a2b, #6b4423); }
-.group-LIGHT_BLUE { background: linear-gradient(135deg, #87ceeb, #5fb3d4); }
-.group-PINK { background: linear-gradient(135deg, #c850c0, #9c27b0); }
-.group-ORANGE { background: linear-gradient(135deg, #ff9800, #e65100); }
-.group-RED { background: linear-gradient(135deg, #f44336, #c62828); }
-.group-YELLOW { background: linear-gradient(135deg, #ffeb3b, #fbc02d); }
-.group-GREEN { background: linear-gradient(135deg, #4caf50, #2e7d32); }
-.group-DARK_BLUE { background: linear-gradient(135deg, #3f51b5, #1a237e); }
+.group-BROWN {
+  background: linear-gradient(135deg, #8b5a2b, #6b4423);
+}
+
+.group-LIGHT_BLUE {
+  background: linear-gradient(135deg, #87ceeb, #5fb3d4);
+}
+
+.group-PINK {
+  background: linear-gradient(135deg, #c850c0, #9c27b0);
+}
+
+.group-ORANGE {
+  background: linear-gradient(135deg, #ff9800, #e65100);
+}
+
+.group-RED {
+  background: linear-gradient(135deg, #f44336, #c62828);
+}
+
+.group-YELLOW {
+  background: linear-gradient(135deg, #ffeb3b, #fbc02d);
+}
+
+.group-GREEN {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+}
+
+.group-DARK_BLUE {
+  background: linear-gradient(135deg, #3f51b5, #1a237e);
+}
 
 /* --- TILE HIGHLIGHTING DURING ANIMATION --- */
 .tile-base.highlighted {
@@ -580,9 +728,19 @@
 }
 
 @keyframes tokenPulse {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* --- HOUSES & HOTELS --- */
@@ -616,7 +774,7 @@
   font-size: 0.5rem;
   color: #e74c3c;
   font-weight: bold;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   padding: 2px 4px;
   border-radius: 2px;
 }
@@ -633,9 +791,17 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
+
 /* --- TOKENS --- */
 .token-container {
   position: absolute;
@@ -643,11 +809,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 50; /* Ensure strictly above flags (z-index 5) and overlays */
+  z-index: 50;
+  /* Ensure strictly above flags (z-index 5) and overlays */
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* Allow clicks to pass through to tile */
+  pointer-events: none;
+  /* Allow clicks to pass through to tile */
   gap: 2px;
   flex-wrap: wrap;
 }
@@ -657,7 +825,7 @@
   height: 20px;
   border-radius: 50%;
   border: 2px solid white;
-  box-shadow: 0 0 5px rgba(0,0,0,0.8);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -668,9 +836,20 @@
 }
 
 @keyframes tokenJump {
-  0% { transform: scale(0.5); opacity: 0; }
-  60% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .token:hover {
@@ -679,7 +858,8 @@
 }
 
 .animated-token {
-  z-index: 60; /* Higher than regular tokens */
+  z-index: 60;
+  /* Higher than regular tokens */
 }
 
 .pulse-token {
@@ -687,85 +867,346 @@
 }
 
 @keyframes tokenPulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-  70% { transform: scale(1.4); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+
+  70% {
+    transform: scale(1.4);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
 }
 
 @keyframes pulse-glow {
-  0% { filter: brightness(1); transform: scale(1); }
-  50% { filter: brightness(1.3); transform: scale(1.02); }
-  100% { filter: brightness(1); transform: scale(1); }
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  50% {
+    filter: brightness(1.3);
+    transform: scale(1.02);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
 }
 
 @keyframes expand-center {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* ========================================
    COLLAPSIBLE PROPERTY PANEL
    ======================================== */
 
-/* The panel container attached to a tile */
+/* ========================================
+   MINIMAL & PROFESSIONAL PROPERTY PANEL
+   ======================================== */
+
 .tile-property-panel {
   position: absolute;
-  background: linear-gradient(145deg, #2c3e50, #1a252f);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  /* Glassmorphism / Modern Dark UI */
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   overflow: hidden;
-  min-width: 180px;
-  max-width: 220px;
+  /* Fixed Dimensions for Stability */
+  width: 220px;
+  height: 260px;
+  /* Fixed height to prevent jumping */
+  display: flex;
+  flex-direction: column;
   pointer-events: auto;
+
+  /* Smooth Fade-in Animation Re-added (Subtle speed) */
+  animation: panelFadeIn 0.15s ease-out;
+  transform-origin: center center;
 }
 
-/* Panel header with property color band */
+/* Position overrides (Pixel-based to match arrow size) */
+/* 12px gap = 10px arrow + 2px buffer */
+.tile-property-panel.expand-up {
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0;
+}
+
+.tile-property-panel.expand-down {
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+}
+
+.tile-property-panel.expand-right {
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 0;
+}
+
+.tile-property-panel.expand-left {
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0;
+}
+
+/* === POINTER ARROW (Speech Bubble Caret) === */
+/* We use ::before for the border and ::after for the background match */
+.tile-property-panel::before,
+.tile-property-panel::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.tile-property-panel::before {
+  /* Border Triangle (Slightly larger, semi-transparent white) */
+  border-width: 11px;
+  border-color: transparent;
+}
+
+.tile-property-panel::after {
+  /* Background Triangle (Matches panel bg) */
+  border-width: 10px;
+  border-color: transparent;
+}
+
+/* Arrow for UP expansion (Points DOWN) */
+.tile-property-panel.expand-up::before {
+  top: 100%;
+  left: 50%;
+  margin-left: -11px;
+  border-top-color: rgba(255, 255, 255, 0.2);
+  /* Border Color */
+}
+
+.tile-property-panel.expand-up::after {
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-top-color: #1e1e1e;
+  /* Match approximate dark BG color */
+}
+
+/* Arrow for DOWN expansion (Points UP) */
+.tile-property-panel.expand-down::before {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.tile-property-panel.expand-down::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-bottom-color: #1e1e1e;
+}
+
+/* Arrow for RIGHT expansion (Points LEFT) */
+.tile-property-panel.expand-right::before {
+  right: 100%;
+  top: 50%;
+  margin-top: -11px;
+  border-right-color: rgba(255, 255, 255, 0.2);
+}
+
+.tile-property-panel.expand-right::after {
+  right: 100%;
+  top: 50%;
+  margin-top: -10px;
+  border-right-color: #1e1e1e;
+}
+
+/* Arrow for LEFT expansion (Points RIGHT) */
+.tile-property-panel.expand-left::before {
+  left: 100%;
+  top: 50%;
+  margin-top: -11px;
+  border-left-color: rgba(255, 255, 255, 0.2);
+}
+
+.tile-property-panel.expand-left::after {
+  left: 100%;
+  top: 50%;
+  margin-top: -10px;
+  border-left-color: #1e1e1e;
+}
+
+@keyframes panelFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0) scale(0.95);
+    /* We need to handle the translate centering manually in animation if we override transform */
+    /* Actually, since we have different classes with different transforms, a single keyframe is tricky unless we separate opacity/scale. 
+       Let's just animate opacity and a slight margin shift or use a wrapper.
+       Wait, the simplest way is to rely on the class's transform and just animate scale/opacity FROM that state? 
+       No, CSS animations override the transform property.
+       
+       Solution: Use `margin` for centering? No, absolute positioning.
+       
+       Let's use a simpler approach: 
+       The base position is fixed by class. 
+       We animate opacity and a slight scale.
+    */
+  }
+}
+
+/* We need distinct animations per direction to preserve the translate centering, 
+   OR we can center it differently. 
+   Actually, let's keep it simple: Just Opacity and Scale. 
+   We have to redefine the keyframes to include the translate.
+*/
+
+@keyframes expandUp {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes expandDown {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes expandRight {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes expandLeft {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* Assign correct animation to classes - REMOVED */
+/* .tile-property-panel.expand-up { animation: expandUp 0.15s ease-out forwards; }
+.tile-property-panel.expand-down { animation: expandDown 0.15s ease-out forwards; }
+.tile-property-panel.expand-right { animation: expandRight 0.15s ease-out forwards; }
+.tile-property-panel.expand-left { animation: expandLeft 0.15s ease-out forwards; } */
+
+
 .panel-header {
-  padding: 8px 10px;
+  padding: 12px 15px;
   color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
+  font-family: 'Antonio', sans-serif;
+  /* Consistent Font */
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .panel-close-btn {
   position: absolute;
-  top: 5px;
-  right: 8px;
-  background: none;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  color: white;
-  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 
 .panel-close-btn:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .panel-body {
-  padding: 10px;
-  font-size: 0.75rem;
-  color: #bdc3c7;
-  max-height: 250px;
-  overflow-y: auto;
+  padding: 15px;
+  font-size: 0.8rem;
+  color: #ecf0f1;
+  font-family: 'Inter', sans-serif;
+  /* Clean sans for data */
 }
 
 .panel-rent-row {
   display: flex;
   justify-content: space-between;
-  padding: 3px 0;
+  padding: 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -773,29 +1214,144 @@
   border-bottom: none;
 }
 
+.panel-rent-row span:first-child {
+  color: #95a5a6;
+  /* Muted label */
+}
+
+.panel-rent-row span:last-child {
+  font-weight: 600;
+  color: #fff;
+}
+
 .panel-footer {
   display: flex;
-  justify-content: space-around;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.3);
+  justify-content: space-between;
+  padding: 12px 15px;
+  background: rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
 }
 
 .panel-stat {
-  text-align: center;
-}
-
-.panel-stat-icon {
-  font-size: 0.9rem;
-}
-
-.panel-actions {
   display: flex;
-  gap: 5px;
-  padding: 8px;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+/* Highlighted tile when active - Subtle */
+.tile-base.panel-active {
+  z-index: 900;
+  /* transform: scale(1.02); REMOVED */
+  /* box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3); REMOVED */
+  /* transition: all 0.2s ease; REMOVED */
+}
+
+/* Old Duplicate Styles Removed to prevent conflicts */
+
+/* --- SPECIFIC TILE OVERRIDES --- */
+
+/* Fix Panel Overflow for Bottom-Corner Tiles (Barcelona & New York) */
+/* "Barcelona" (st_charles) - Left Side, Bottom */
+.tile-st_charles .tile-property-panel {
+  top: auto !important;
+  /* Override top: 50% */
+  bottom: -10px !important;
+  /* Align to bottom of tile with slight offset */
+  transform: translateY(0) !important;
+  /* Remove Y Centering */
+}
+
+/* Re-align arrow for shifted panel (Both border and background triangles) */
+.tile-st_charles .tile-property-panel::before,
+.tile-st_charles .tile-property-panel::after {
+  top: 85% !important;
+  /* Move arrow down to match tile position */
+}
+
+/* "New York" (boardwalk) - Right Side, Bottom */
+.tile-boardwalk .tile-property-panel {
+  top: auto !important;
+  bottom: -10px !important;
+  transform: translateY(0) !important;
+}
+
+.tile-boardwalk .tile-property-panel::before,
+.tile-boardwalk .tile-property-panel::after {
+  top: 85% !important;
+}
+
+/* CDG Airport & Water Company - Move text down */
+/* IDs: "bo_rr" (CDG) and "water" (Water Company) */
+.tile-bo_rr .tile-name,
+.tile-water .tile-name {
+  padding-top: 25px;
+  /* Visual shift down */
+}
+
+/* Tax Tiles - Fix layout */
+
+/* INCOME TAX (Bottom Side - Horizontal Tile) */
+.tile-income_tax .tile-content {
+  flex-direction: column;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
+  /* Center horizontally */
+  gap: 2px;
+}
+
+.tile-income_tax .tile-name {
+  padding: 0 !important;
+  flex-grow: 0;
+  margin-top: 28px;
+  /* Clear the top icon (20px intrusion) */
+}
+
+/* LUXURY TAX (Right Side - Vertical Tile) */
+.tile-luxury_tax .tile-content {
+  flex-direction: row;
+  /* Horizontal flow (for vertical elements) */
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.tile-luxury_tax .tile-name {
+  padding: 0 !important;
+  /* Icon on Left (Inner) protrudes 20px. 
+       Add margin to push text Right. */
+  margin-left: 35px !important;
+  flex-grow: 0;
+}
+
+.tile-luxury_tax .tax-price {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 4px 6px;
+  border-radius: 4px;
+  margin: 0;
+  text-align: center;
+  width: auto;
+  /* Ensure price doesn't get pushed too far or squashed */
+  flex-shrink: 0;
+}
+
+
+/* --- RIGHT SIDE PRICE BAR FIX --- */
+/* User said it is "leftward instead of rightward". Flipping 180deg. */
+.side-right .tile-price-bar {
+  transform: rotate(180deg);
+}
+
+.tile-price.tax-price {
+  /* Ensure tax price is visible and nicely styled */
+  position: relative;
+  display: block;
+  margin-top: 2px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: auto;
 }
 
 .panel-action-btn {
@@ -812,10 +1368,25 @@
   transform: scale(1.05);
 }
 
-.panel-action-btn.build { background: #27ae60; color: white; }
-.panel-action-btn.sell { background: #f39c12; color: white; }
-.panel-action-btn.mortgage { background: #8d6e63; color: white; }
-.panel-action-btn.unmortgage { background: #2ecc71; color: white; }
+.panel-action-btn.build {
+  background: #27ae60;
+  color: white;
+}
+
+.panel-action-btn.sell {
+  background: #f39c12;
+  color: white;
+}
+
+.panel-action-btn.mortgage {
+  background: #8d6e63;
+  color: white;
+}
+
+.panel-action-btn.unmortgage {
+  background: #2ecc71;
+  color: white;
+}
 
 .panel-mortgage-badge {
   background: #e74c3c;
@@ -828,71 +1399,4 @@
   border-radius: 4px;
 }
 
-/* Direction-specific positioning */
-/* Bottom tiles: panel expands UPWARD */
-.tile-property-panel.expand-up {
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 5px;
-  transform-origin: bottom center;
-  animation: expandUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Top tiles: panel expands DOWNWARD */
-.tile-property-panel.expand-down {
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 5px;
-  transform-origin: top center;
-  animation: expandDown 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Left tiles: panel expands RIGHTWARD */
-.tile-property-panel.expand-right {
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 5px;
-  transform-origin: left center;
-  animation: expandRight 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Right tiles: panel expands LEFTWARD */
-.tile-property-panel.expand-left {
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 5px;
-  transform-origin: right center;
-  animation: expandLeft 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes expandUp {
-  0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
-  100% { opacity: 1; transform: translateX(-50%) scaleY(1); }
-}
-
-@keyframes expandDown {
-  0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
-  100% { opacity: 1; transform: translateX(-50%) scaleY(1); }
-}
-
-@keyframes expandRight {
-  0% { opacity: 0; transform: translateY(-50%) scaleX(0); }
-  100% { opacity: 1; transform: translateY(-50%) scaleX(1); }
-}
-
-@keyframes expandLeft {
-  0% { opacity: 0; transform: translateY(-50%) scaleX(0); }
-  100% { opacity: 1; transform: translateY(-50%) scaleX(1); }
-}
-
-/* Highlighted tile when panel is open */
-.tile-base.panel-active {
-  z-index: 500;
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
-}
-
+/* Old animations removed */
